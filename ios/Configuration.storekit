@@ -1,0 +1,138 @@
+{
+  "identifier" : "F84FD56F",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "722F30A1",
+      "localizations" : [
+
+      ],
+      "name" : "premium_subscription_group",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "52DF487D",
+          "introductoryOffer" : {
+            "internalID" : "6BD78479",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P3D"
+          },
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.sfseditor.monthly4.99",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Premium Monthly Subscription",
+          "subscriptionGroupID" : "722F30A1",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "24.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "00F61A8D",
+          "introductoryOffer" : {
+            "internalID" : "1FA726BF",
+            "paymentMode" : "free",
+            "subscriptionPeriod" : "P3D"
+          },
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.sfseditor.yearly24.99",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Premium Yearly Subscription",
+          "subscriptionGroupID" : "722F30A1",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "subscriptionOffersKeyPair" : {
+    "id" : "A14CC23F",
+    "privateKey" : "MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgKkiqvwmrPPGmEy76vKUzS6zYSNcdiW2Xl01kdfrpb0SgCgYIKoZIzj0DAQehRANCAARsPtNuaR0aK/NOSsv0QpzwYOqrRN7lHrEutKWLZlMtiwnYZD/2xtYJmtfwIzO/BYm07qHwW8X6GhXZluSsNiZK"
+  },
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}
