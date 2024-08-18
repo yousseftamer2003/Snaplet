@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:google_fonts/google_fonts.dart';
@@ -31,16 +32,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   File? image;
   String? base64Image;
   int? selectedIndex;
   List<AiModels> texttoImage = [];
   List<AiModels> imagetoImage = [];
   List<AiModels> controlNet = [];
-
   AiModels? selectedModel;
   TextEditingController promptController = TextEditingController();
   bool isButtonEnabled = false;
+  bool isAppropriate = true;
   SharedPreferences? prefs;
   int freeAttempts = 0;
 
@@ -77,8 +79,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    if(!(InAppPurchase.isPro || InAppPurchase.isProAI)){
-      Provider.of<RewardAdsService>(context,listen: false).loadAd();
+    if (!(InAppPurchase.isPro || InAppPurchase.isProAI)) {
+      Provider.of<RewardAdsService>(context, listen: false).loadAd();
     }
     if (!InAppPurchase.isProAI) {
       _init();
@@ -144,28 +146,38 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void generateImage() {
-      if (!InAppPurchase.isProAI) {
-        _incrementAttempts();
-      }
-      if (selectedModel == null) {
-        Provider.of<GetIMageServices>(context, listen: false)
-            .postEssential(promptController.text);
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (ctx) => const ResultScreen(
-                  isEditor: false,
-                  isVid: false,
-                )));
-      } else {
-        Provider.of<GetIMageServices>(context, listen: false)
-            .postTextToText(promptController.text, selectedModel!);
-      }
+    if (!InAppPurchase.isProAI) {
+      _incrementAttempts();
+    }
+    if (selectedModel == null) {
+      Provider.of<GetIMageServices>(context, listen: false)
+          .postEssential(promptController.text);
       Navigator.of(context).push(MaterialPageRoute(
           builder: (ctx) => const ResultScreen(
                 isEditor: false,
                 isVid: false,
               )));
-    
+    } else {
+      Provider.of<GetIMageServices>(context, listen: false)
+          .postTextToText(promptController.text, selectedModel!);
+    }
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (ctx) => const ResultScreen(
+              isEditor: false,
+              isVid: false,
+            )));
   }
+  
+  bool isContentAppropriate(String prompt) {
+    for (var word in  bannedWords) {
+    if (prompt.toLowerCase().contains(word.toLowerCase())) {
+      return false;
+    }
+  }
+  
+  return true;
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +241,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                             style: GoogleFonts.nunito(
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: 24)),
-                                        const Icon(Icons.edit, color: Colors.purple),
+                                        const Icon(Icons.edit,
+                                            color: Colors.purple),
                                       ],
                                     ),
                                   ],
@@ -237,31 +250,44 @@ class _MyHomePageState extends State<MyHomePage> {
                                 SizedBox(
                                   height: 30.h,
                                 ),
-                                TextFormField(
-                                  controller: promptController,
-                                  maxLines: null,
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        'Type here a detailed description for what you want to see in your artwork',
-                                    hintStyle: TextStyle(
-                                        fontWeight: FontWeight.w700,
+                                Form(
+                                  key: formKey,
+                                  child: TextFormField(
+                                    inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s!+-_@#$%^&*(),.?":{}|<>]'),),
+                            ],
+                                    controller: promptController,
+                                    maxLines: null,
+                                    decoration: InputDecoration(
+                                      helperText: 'Only English letters, numbers, and symbols are allowed.',
+                                      hintText:
+                                          'Type here a detailed description for what you want to see in your artwork',
+                                      hintStyle: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: themeProvider.isDarkMode
+                                              ? Colors.white.withOpacity(0.4)
+                                              : Colors.black.withOpacity(0.4)),
+                                      hintMaxLines: 3,
+                                      border: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 20.0),
+                                    ),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w600,
                                         color: themeProvider.isDarkMode
-                                            ? Colors.white.withOpacity(0.4)
-                                            : Colors.black.withOpacity(0.4)),
-                                    hintMaxLines: 3,
-                                    border: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.always,
-                                    contentPadding: const EdgeInsets.symmetric(
-                                        vertical: 20.0),
+                                            ? Colors.white
+                                            : Colors.black),
+                                    onSaved: (value) async{
+                                      setState(()  {
+                                        isAppropriate =  isContentAppropriate(value!);
+                                      });
+                                    },
                                   ),
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: themeProvider.isDarkMode
-                                          ? Colors.white
-                                          : Colors.black),
                                 ),
                               ],
                             ),
@@ -403,7 +429,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                   if (isLocked)
                                     InkWell(
-                                      onTap: (){
+                                      onTap: () {
                                         InAppPurchase.fetchOffers(context);
                                       },
                                       child: Container(
@@ -421,7 +447,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                               Text(
                                                 'Pro',
                                                 style: TextStyle(
-                                                    fontWeight: FontWeight.bold),
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                             ],
                                           ),
@@ -443,16 +470,33 @@ class _MyHomePageState extends State<MyHomePage> {
                         horizontal: 30.w,
                       ),
                       child: ElevatedButton(
-                        onPressed: isButtonEnabled
+                        onPressed: isButtonEnabled 
                             ? () {
-                                if(freeAttempts <= 2){
-                                  if(InAppPurchase.isPro || InAppPurchase.isProAI){
-                                    generateImage();
-                                  }else{
-                                    Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
-                                  }
-                                }else{
-                                  showMyDialog(context);
+                              if (formKey.currentState!.validate()) {
+                                  formKey.currentState!.save();
+                                }
+                              //   if(isAppropriate){
+                              //     if (freeAttempts <= 2) {
+                              //     if (InAppPurchase.isPro ||
+                              //         InAppPurchase.isProAI) {
+                              //       generateImage();
+                              //     } else {
+                              //       Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
+                              //     }
+                              //   } else {
+                              //     showMyDialog(context);
+                              //   }
+                              //   }else{
+                              //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
+                              //   }
+                              
+                              if(isAppropriate){
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('done abn khalty')));
+                              }else{
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
+                              }
+                                if (formKey.currentState!.validate()) {
+                                  formKey.currentState!.save();
                                 }
                               }
                             : null,

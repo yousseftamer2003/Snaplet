@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class RewardAdsService with ChangeNotifier {
+  String? errorMessage;
   RewardedInterstitialAd? rewardedInterstitialAd;
   final adUnitId = Platform.isAndroid
       ? 'ca-app-pub-3523762960785202/7946213982'
@@ -24,7 +25,7 @@ class RewardAdsService with ChangeNotifier {
             },
             onAdDismissedFullScreenContent: (ad) {
               ad.dispose();
-              rewardedInterstitialAd = null; // Set rewardedInterstitialAd to null when ad is dismissed
+              rewardedInterstitialAd = null;
               notifyListeners();
             },
             onAdClicked: (ad) {},
@@ -34,7 +35,11 @@ class RewardAdsService with ChangeNotifier {
           notifyListeners();
         },
         onAdFailedToLoad: (LoadAdError error) {
-          log('RewardedInterstitialAd failed to load: $error');
+          log('RewardedInterstitialAd failed to load: ${error.message}');
+          if (error.message == 'No fill.') {
+            errorMessage = error.message;
+            notifyListeners();
+          }
         },
       ),
     );
@@ -46,7 +51,12 @@ class RewardAdsService with ChangeNotifier {
         onTapShare!();
         Navigator.of(context).pop();
       });
-    } else {
+    }else if(errorMessage != null && errorMessage == 'No fill.'){
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ads are not available now.')),
+      );
+      onTapShare!();
+    }else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ad has not reloaded yet, please wait a few seconds')),
       );

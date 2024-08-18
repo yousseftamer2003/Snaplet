@@ -4,12 +4,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:google_fonts/google_fonts.dart';
+
 import 'package:provider/provider.dart';
 import 'package:sfs_editor/constants/color.dart';
 import 'package:sfs_editor/constants/strings.dart';
 import 'package:sfs_editor/services/dark_mode_service.dart';
-import 'package:in_app_review/in_app_review.dart';
+// import 'package:in_app_review/in_app_review.dart';
 import 'package:share_plus/share_plus.dart';
 
 import 'package:url_launcher/url_launcher_string.dart';
@@ -51,7 +51,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    final InAppReview inAppReview = InAppReview.instance;
+    // final InAppReview inAppReview = InAppReview.instance;
     return Scaffold(
       backgroundColor: themeProvider.isDarkMode ? darkMoodColor : Colors.white,
       appBar: AppBar(
@@ -121,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     color: themeProvider.isDarkMode
                         ? darkModeHeavey
                         : const Color.fromARGB(255, 229, 226, 226)),
-                height: 222.h,
+                height: 175.h,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -155,25 +155,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       },
                     ),
                     const Divider(),
-                    ListTile(
-                      title: Text(
-                        'Like us?, rate us!',
-                        style:  TextStyle(
-                          fontWeight: FontWeight.w700,
-                          color: themeProvider.isDarkMode
-                              ? Colors.white
-                              : Colors.black,
-                        ),
-                      ),
-                      onTap:  () async {
-        if (await inAppReview.isAvailable()) {
-          inAppReview.requestReview();
-        } else {
-          inAppReview.openStoreListing();
-        }
-      },
-                    ),
-                    const Divider(),
+      //               ListTile(
+      //                 title: Text(
+      //                   'Like us?, rate us!',
+      //                   style:  TextStyle(
+      //                     fontWeight: FontWeight.w700,
+      //                     color: themeProvider.isDarkMode
+      //                         ? Colors.white
+      //                         : Colors.black,
+      //                   ),
+      //                 ),
+      //                 onTap:  () async {
+      //   if (await inAppReview.isAvailable()) {
+      //     inAppReview.requestReview();
+      //   } else {
+      //     inAppReview.openStoreListing();
+      //   }
+      // },
+      //               ),
+                    //const Divider(),
                     ListTile(
                       title: Text(
                         'Official Website',

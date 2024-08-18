@@ -125,6 +125,7 @@ class GetIMageServices with ChangeNotifier {
         body: jsonEncode({
           "model": selectedModel.id,
           "prompt": promptText,
+          "negative_prompt": "nude women",
           "strength": 0.5,
           "steps": selectedModel.family == 'latent-consistency'? 8 : 50,
           "image" : image,

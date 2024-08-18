@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:google_fonts/google_fonts.dart';
@@ -39,9 +40,11 @@ class ImageToImageScreen extends StatefulWidget {
 }
 
 class _ImageToImageScreenState extends State<ImageToImageScreen> {
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController promptController = TextEditingController();
   String? base64Image;
   int cropTrials = 0;
+  bool isAppropriate = true;
   int? selectedIndex;
   bool isButtonEnabled = false;
   bool isAspectRatioEqual = false;
@@ -195,6 +198,16 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
             )));
   }
 
+  bool isContentAppropriate(String prompt) {
+    for (var word in  bannedWords) {
+    if (prompt.toLowerCase().contains(word.toLowerCase())) {
+      return false;
+    }
+  }
+  
+  return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -293,36 +306,48 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                           SizedBox(
                             height: 30.h,
                           ),
-                          TextFormField(
-                            controller: promptController,
-                            maxLines: null,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25.sp,
+                          Form(
+                            key: formKey,
+                            child: TextFormField(
+                              controller: promptController,
+                              maxLines: null,
+                              inputFormatters: [
+                                          FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s!+-_@#$%^&*(),.?":{}|<>]'),),
+                              ],
+                              decoration: InputDecoration(
+                                labelStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25.sp,
+                                ),
+                                hintText:
+                                    'Type here a detailed description for what you want to see in your artwork',
+                                helperText: 'Only English letters, numbers, and symbols are allowed.',
+                                hintStyle: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: themeProvider.isDarkMode
+                                        ? Colors.white.withOpacity(0.4)
+                                        : Colors.black.withOpacity(0.4),
+                                    fontSize: 14.sp),
+                                hintMaxLines: 3,
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.always,
+                                contentPadding:
+                                    const EdgeInsets.symmetric(vertical: 20.0),
                               ),
-                              hintText:
-                                  'Type here a detailed description for what you want to see in your artwork',
-                              hintStyle: TextStyle(
-                                  fontWeight: FontWeight.w700,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
                                   color: themeProvider.isDarkMode
-                                      ? Colors.white.withOpacity(0.4)
-                                      : Colors.black.withOpacity(0.4),
-                                  fontSize: 14.sp),
-                              hintMaxLines: 3,
-                              border: InputBorder.none,
-                              enabledBorder: InputBorder.none,
-                              focusedBorder: InputBorder.none,
-                              floatingLabelBehavior:
-                                  FloatingLabelBehavior.always,
-                              contentPadding:
-                                  const EdgeInsets.symmetric(vertical: 20.0),
+                                      ? Colors.white
+                                      : Colors.black),
+                                      onSaved: (value) async{
+                                        setState(()  {
+                                          isAppropriate =  isContentAppropriate(value!);
+                                        });
+                                      },
                             ),
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: themeProvider.isDarkMode
-                                    ? Colors.white
-                                    : Colors.black),
                           ),
                           const Row(
                             mainAxisAlignment: MainAxisAlignment.end,
@@ -509,15 +534,31 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                           (base64Image != null || widget.resuseImage != null) &&
                           isAspectRatioEqual
                       ? () {
-                          if (freeAttempts <= 2) {
-                            if(InAppPurchase.isPro || InAppPurchase.isProAI){
-                                    generateImage();
-                                  }else{
-                                    Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
-                                  }
-                          } else {
-                            showMyDialog(context);
-                          }
+                        if (formKey.currentState!.validate()) {
+                                  formKey.currentState!.save();
+                                }
+                          //       if(isAppropriate){
+                          //         if (freeAttempts <= 2) {
+                          //   if(InAppPurchase.isPro || InAppPurchase.isProAI){
+                          //           generateImage();
+                          //         }else{
+                          //           Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
+                          //         }
+                          // } else {
+                          //   showMyDialog(context);
+                          // }
+                          //       }else{
+                          //         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
+                          //       }
+                          if(isAppropriate){
+                                // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('done abn khalty')));
+                                generateImage();
+                              }else{
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
+                              }
+                                if (formKey.currentState!.validate()) {
+                                  formKey.currentState!.save();
+                                }
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
