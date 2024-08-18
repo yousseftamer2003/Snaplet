@@ -475,26 +475,20 @@ class _MyHomePageState extends State<MyHomePage> {
                               if (formKey.currentState!.validate()) {
                                   formKey.currentState!.save();
                                 }
-                              //   if(isAppropriate){
-                              //     if (freeAttempts <= 2) {
-                              //     if (InAppPurchase.isPro ||
-                              //         InAppPurchase.isProAI) {
-                              //       generateImage();
-                              //     } else {
-                              //       Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
-                              //     }
-                              //   } else {
-                              //     showMyDialog(context);
-                              //   }
-                              //   }else{
-                              //     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
-                              //   }
-                              
-                              if(isAppropriate){
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('done abn khalty')));
-                              }else{
-                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
-                              }
+                                if(isAppropriate){
+                                  if (freeAttempts <= 2) {
+                                  if (InAppPurchase.isPro ||
+                                      InAppPurchase.isProAI) {
+                                    generateImage();
+                                  } else {
+                                    Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
+                                  }
+                                } else {
+                                  showMyDialog(context);
+                                }
+                                }else{
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
+                                }
                                 if (formKey.currentState!.validate()) {
                                   formKey.currentState!.save();
                                 }
