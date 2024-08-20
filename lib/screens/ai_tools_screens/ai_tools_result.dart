@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
@@ -64,6 +66,46 @@ class _AiToolsResultState extends State<AiToolsResult> {
       );
     }
   }
+  Future<void> sendEmail(Uint8List? recievedImage) async {
+  if (recievedImage == null) {
+    
+    return;
+  }
+
+  
+  final Directory tempDir = await getTemporaryDirectory();
+
+  final String filePath = '${tempDir.path}/image.png';
+  final File imageFile = File(filePath);
+  await imageFile.writeAsBytes(recievedImage);
+
+  
+  final Email email = Email(
+    body: '',
+    subject: 'Report inappropriate content',
+    recipients: ['Moatazforads@gmail.com'],
+    isHTML: false,
+    attachmentPaths: [filePath],
+  );
+
+  String platformResponse;
+
+  try {
+    await FlutterEmailSender.send(email);
+    platformResponse = 'success';
+  } catch (error) {
+    log('$error');
+    platformResponse = error.toString();
+  }
+
+  if (!mounted) return;
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(platformResponse),
+    ),
+  );
+}
   
   @override
   Widget build(BuildContext context) {
@@ -129,8 +171,26 @@ class _AiToolsResultState extends State<AiToolsResult> {
                     ),
                     
                   const SizedBox(
-                    height: 25,
+                    height: 10,
                   ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 0,
+                        horizontal: 12,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Report inappropriate contenret:'),
+                          ElevatedButton(onPressed: (){
+                            sendEmail(aitoolProvider.imageData);
+                          }, child: const Text('Report'))
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [

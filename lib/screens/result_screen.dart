@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:image_editor_plus/image_editor_plus.dart';
@@ -133,6 +135,47 @@ class _ResultScreenState extends State<ResultScreen> {
                               });
                               }
 
+  Future<void> sendEmail(Uint8List? recievedImage) async {
+  if (recievedImage == null) {
+    
+    return;
+  }
+
+  
+  final Directory tempDir = await getTemporaryDirectory();
+
+  final String filePath = '${tempDir.path}/image.png';
+  final File imageFile = File(filePath);
+  await imageFile.writeAsBytes(recievedImage);
+
+  
+  final Email email = Email(
+    body: '',
+    subject: 'Report inappropriate content',
+    recipients: ['Moatazforads@gmail.com'],
+    isHTML: false,
+    attachmentPaths: [filePath],
+  );
+
+  String platformResponse;
+
+  try {
+    await FlutterEmailSender.send(email);
+    platformResponse = 'success';
+  } catch (error) {
+    log('$error');
+    platformResponse = error.toString();
+  }
+
+  if (!mounted) return;
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(platformResponse),
+    ),
+  );
+}
+
   @override
   void dispose() {
     controller.dispose();
@@ -243,7 +286,7 @@ class _ResultScreenState extends State<ResultScreen> {
                   if(!(InAppPurchase.isPro || InAppPurchase.isProAI))
                     Padding(
                       padding:
-                          const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                          const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -268,6 +311,24 @@ class _ResultScreenState extends State<ResultScreen> {
                               Provider.of<RewardAdsService>(context,listen: false).showAd(context, changeSwitch);
                             },
                           ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 0,
+                        horizontal: 12,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Report inappropriate contenret:'),
+                          ElevatedButton(onPressed: (){
+                            sendEmail(recievedImage);
+                          }, child: const Text('Report'))
                         ],
                       ),
                     ),
@@ -551,7 +612,7 @@ class CustomRoundedButon extends StatelessWidget {
             child: Center(
               child: Icon(
                 icon,
-                size: 40,
+                size: 35,
                 color: Colors.black
               ),
             ),
