@@ -211,7 +211,7 @@ Widget _buildGridItem(
           ),
         ),
       ),
-      !InAppPurchase.isPro? Container(
+      (!(InAppPurchase.isPro || InAppPurchase.isProAI))? Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.0),
           color: Colors.grey.withOpacity(0.8),

@@ -130,7 +130,7 @@ class _PricingScreenState extends State<PricingScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
-              vertical: 70,
+              vertical: 65,
               horizontal: 20,
             ),
             child: GestureDetector(
@@ -178,7 +178,7 @@ class _PricingScreenState extends State<PricingScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10)
                   ),
-                  height: 180,
+                  height: 140,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Scrollbar(

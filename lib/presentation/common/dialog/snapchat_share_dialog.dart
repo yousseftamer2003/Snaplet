@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:sfs_editor/core/in_app_purchase.dart';
 
 class SnapChatShareDialog extends StatefulWidget {
   const SnapChatShareDialog({super.key, this.onTapShare});
@@ -143,7 +144,7 @@ class _SnapChatShareDialogState extends State<SnapChatShareDialog> {
                     ),
                     child: InkWell(
                       onTap: () {
-                        // Add functionality for getting premium
+                        InAppPurchase.fetchOffers(context);
                       },
                       child: const Padding(
                         padding: EdgeInsets.symmetric(

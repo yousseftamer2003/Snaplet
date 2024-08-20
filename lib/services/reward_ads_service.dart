@@ -49,7 +49,6 @@ class RewardAdsService with ChangeNotifier {
     if (rewardedInterstitialAd != null) {
       rewardedInterstitialAd!.show(onUserEarnedReward: (ad, reward) {
         onTapShare!();
-        Navigator.of(context).pop();
       });
     }else if(errorMessage != null && errorMessage == 'No fill.'){
       ScaffoldMessenger.of(context).showSnackBar(

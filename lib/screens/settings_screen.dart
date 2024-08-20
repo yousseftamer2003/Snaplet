@@ -100,7 +100,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             CustomSettingsContainer(
                 onTap: () {
                   Share.share(
-          'Check out this amazing app: Snaplet! Download it from [Google Play](https://play.google.com/store/apps/details?id=com.m3tz.sfs_editor&pcampaignid=web_share) and App store soon',
+          'Check out this amazing app: Snaplet! Download it from [Google Play](https://play.google.com/store/apps/details?id=com.m3tz.sfs_editor) and App store soon',
         );
                 },
                 text: 'Share Snaplet',

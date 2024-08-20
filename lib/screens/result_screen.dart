@@ -20,6 +20,7 @@ import 'package:sfs_editor/screens/tabs_screen.dart';
 import 'package:sfs_editor/services/dark_mode_service.dart';
 import 'package:sfs_editor/services/getimg_services.dart';
 import 'package:sfs_editor/services/reward_ads_service.dart';
+import 'package:sfs_editor/widgets/generating_widget.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:video_player/video_player.dart';
 import 'package:image/image.dart' as img;
@@ -37,7 +38,6 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
-  late VideoPlayerController controller;
   late VideoPlayerController _videoController;
   Uint8List? watermarkedImage;
   bool isSwitched = InAppPurchase.isPro || InAppPurchase.isProAI;
@@ -121,19 +121,12 @@ class _ResultScreenState extends State<ResultScreen> {
           _videoController.setLooping(true);
         });
     }
-    controller =
-        VideoPlayerController.asset('assets/videos/generatingsmall.mp4')
-          ..initialize().then((_) {
-            setState(() {});
-            controller.play();
-            controller.setLooping(true);
-          });
   }
   void changeSwitch(){
-                                setState(() {
-                                isSwitched = !isSwitched;
-                              });
-                              }
+    setState(() {
+      isSwitched = !isSwitched;
+    });
+  }
 
   Future<void> sendEmail(Uint8List? recievedImage) async {
   if (recievedImage == null) {
@@ -176,11 +169,6 @@ class _ResultScreenState extends State<ResultScreen> {
   );
 }
 
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -228,13 +216,15 @@ class _ResultScreenState extends State<ResultScreen> {
               if (getImageProvider.imageData == null &&
                   widget.editedImage == null &&
                   widget.editedvideo == null) {
-                return Center(
-                  child: controller.value.isInitialized
-                      ? AspectRatio(
-                          aspectRatio: controller.value.aspectRatio,
-                          child: VideoPlayer(controller),
-                        )
-                      : Image.asset('assets/starryImages/insideLogo.png'),
+                return const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GeneratingWidget(),
+                      SizedBox(height: 5,),
+                      Text('generating...')
+                    ],
+                  ),
                 );
               } else {
                 isEditorCheck();

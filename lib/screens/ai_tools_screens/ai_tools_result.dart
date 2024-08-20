@@ -20,8 +20,8 @@ import 'package:sfs_editor/screens/tabs_screen.dart';
 import 'package:sfs_editor/services/ai_tools_service.dart';
 import 'package:sfs_editor/services/dark_mode_service.dart';
 import 'package:sfs_editor/services/getimg_services.dart';
+import 'package:sfs_editor/widgets/generating_widget.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:video_player/video_player.dart';
 
 class AiToolsResult extends StatefulWidget {
   const AiToolsResult({super.key});
@@ -31,20 +31,8 @@ class AiToolsResult extends StatefulWidget {
 }
 
 class _AiToolsResultState extends State<AiToolsResult> {
-  late VideoPlayerController controller;
   Uint8List? watermarkedImage;
   
-
-  @override
-  void initState() {
-    controller = VideoPlayerController.asset('assets/videos/generatingsmall.mp4')
-      ..initialize().then((_) {
-        setState(() {});
-        controller.play();
-        controller.setLooping(true);
-      });
-    super.initState();
-  }
   Future<void> saveImage(Uint8List imageData) async {
     final status = await Permission.storage.request();
 
@@ -142,14 +130,16 @@ class _AiToolsResultState extends State<AiToolsResult> {
         child: Consumer<AiToolsProvider>(
           builder: (context, aitoolProvider, _) {
             if(aitoolProvider.imageData == null){
-              return Center(
-                child: controller.value.isInitialized
-                    ? AspectRatio(
-                        aspectRatio: controller.value.aspectRatio,
-                        child: VideoPlayer(controller),
-                      )
-                    : Image.asset('assets/starryImages/insideLogo.png'),
-              );
+              return const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GeneratingWidget(),
+                      SizedBox(height: 5,),
+                      Text('generating...')
+                    ],
+                  ),
+                );
             }else{
               return Column(
                 children: [
