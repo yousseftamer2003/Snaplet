@@ -11,19 +11,27 @@ import 'package:sfs_editor/screens/settings_screen.dart';
 import 'package:sfs_editor/services/dark_mode_service.dart';
 
 class TabsScreen extends StatefulWidget {
-  const TabsScreen({super.key});
+  const TabsScreen({super.key,this.isEditor});
+  final bool? isEditor;
 
   @override
   State<TabsScreen> createState() => _TabsScreenState();
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  int selectedIndex = 1;
+  int? selectedIndex;
   List<Widget> pages = [];
   bool _isFetchOffersCalled = false;
 
   @override
   void initState() {
+    if(widget.isEditor != null){
+      if(widget.isEditor!){
+        selectedIndex = 0;
+      }
+    }else{
+      selectedIndex =1;
+    }
     pages = [
       const EditOptionScreen(),
       const MyHomePage(),
@@ -110,7 +118,7 @@ class _TabsScreenState extends State<TabsScreen> {
             label: 'AI Tools',
           ),
         ],
-        currentIndex: selectedIndex,
+        currentIndex: selectedIndex ?? 1,
         selectedItemColor: Colors.pink,
         unselectedItemColor: themeProvider.isDarkMode ? Colors.white : Colors.black,
         onTap: onItemTapped,
