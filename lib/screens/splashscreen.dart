@@ -1,7 +1,8 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import 'package:sfs_editor/widgets/onboarding_check.dart';
+import 'package:video_player/video_player.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -24,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Timer(const Duration(seconds: 11), () {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => const OnBoardingCheck(), 
+        builder: (context) => const OnBoardingCheck(),
       ));
     });
   }
