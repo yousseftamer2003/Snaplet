@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
@@ -527,8 +529,12 @@ class _ToolsPromptScreenState extends State<ToolsPromptScreen> {
                     onPressed: isButtonEnabled &&
                             base64Image != null &&
                             isAspectRatioEqual
-                        ? () {
-                            if (!widget.isUpscale &&
+                        ? () async{
+                            bool hasInternet = await checkInternetConnection();
+                            if(!hasInternet){
+                              showNoInternetDialog(context);
+                            }else{
+                              if (!widget.isUpscale &&
                                 !widget.isFixFace &&
                                 widget.models == null) {
                               Provider.of<AiToolsProvider>(context, listen: false)
@@ -575,6 +581,7 @@ class _ToolsPromptScreenState extends State<ToolsPromptScreen> {
                             }
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (ctx) => const AiToolsResult()));
+                            }
                           }
                         : null,
                     style: ElevatedButton.styleFrom(

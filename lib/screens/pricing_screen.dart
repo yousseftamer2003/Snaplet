@@ -209,7 +209,7 @@ class _PricingScreenState extends State<PricingScreen> {
                                 ),
                               ),
                               Text(
-                                'Starting from today Trial period for 3 days MYR 34.99/week Starting from ${_getTodayDateString()} You can pay at any time on the Google Play subscriptions page.No charges will be made if you cancel the subscription before the end of the trial period, and a reminder will be sent to you two days before the trial ends.',
+                                'Starting from today Trial period for 3 days ${packageToString(!isSwitched ? widget.packages[selectedProduct] : packages[selectedProduct])} Starting from ${_getTodayDateString()} You can pay at any time on the Google Play subscriptions page.No charges will be made if you cancel the subscription before the end of the trial period, and a reminder will be sent to you two days before the trial ends.',
                                 style: const TextStyle(color: Colors.black),
                               ),
                             ],
@@ -254,11 +254,11 @@ class _PricingScreenState extends State<PricingScreen> {
                     ),
                     Switch(
                         value: isSwitched,
-                        onChanged: (value) {
+                        onChanged: (value) async{
+                          await fetchOffers();
                           setState(() {
                             isSwitched = !isSwitched;
                           });
-                          fetchOffers();
                         }),
                   ],
                 ),
@@ -333,10 +333,6 @@ class _PricingScreenState extends State<PricingScreen> {
                                         ],
                                       ),
                                     ),
-                                    // const Text(
-                                    //   ', Cancel Anytime',
-                                    //   style: TextStyle(color: Colors.black),
-                                    // )
                                   ],
                                 ),
                                 if (selectedProduct == index)

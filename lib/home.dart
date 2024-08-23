@@ -476,15 +476,20 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         child: ElevatedButton(
                           onPressed: isButtonEnabled 
-                              ? () {
+                              ? () async{
                                 if (formKey.currentState!.validate()) {
                                     formKey.currentState!.save();
                                   }
                                   if(isAppropriate){
                                     if (freeAttempts <= 2) {
-                                    if (InAppPurchase.isPro ||
-                                        InAppPurchase.isProAI) {
-                                      generateImage();
+                                    if (InAppPurchase.isPro || InAppPurchase.isProAI) {
+                                        bool hasInternet = await checkInternetConnection();
+                                        if(hasInternet){
+                                          generateImage();
+                                        }else{
+                                          // ignore: use_build_context_synchronously
+                                          showNoInternetDialog(context);
+                                        }
                                     } else {
                                       Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
                                     }

@@ -538,14 +538,20 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                     onPressed: isButtonEnabled &&
                             (base64Image != null || widget.resuseImage != null) &&
                             isAspectRatioEqual
-                        ? () {
+                        ? () async{
                           if (formKey.currentState!.validate()) {
                                     formKey.currentState!.save();
                                   }
                                   if(isAppropriate){
                                     if (freeAttempts <= 2) {
                               if(InAppPurchase.isPro || InAppPurchase.isProAI){
-                                      generateImage();
+                                      bool hasInternet = await checkInternetConnection();
+                                        if(hasInternet){
+                                          generateImage();
+                                        }else{
+                                          // ignore: use_build_context_synchronously
+                                          showNoInternetDialog(context);
+                                        }
                                     }else{
                                       Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
                                     }
