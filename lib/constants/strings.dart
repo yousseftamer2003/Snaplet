@@ -1,3 +1,6 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/material.dart';
+
 const termsAndConditionsUrl = 'https://snaplet.art/terms-of-service/';
 const privacypolicyurl = 'https://snaplet.art/privacy-policy/';
 
@@ -80,7 +83,30 @@ List<String> inpaint = [
 
 // List<String> instruct = [];
 
-
+void showNoInternetDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('No Internet Connection'),
+      content: const Text('Please check your internet connection and try again.'),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
+}
+Future<bool> checkInternetConnection() async {
+  var connectivityResult = await Connectivity().checkConnectivity();
+  if (connectivityResult.contains(ConnectivityResult.mobile)) {
+    return true; 
+  }else if(connectivityResult.contains(ConnectivityResult.wifi)){
+    return true;
+  }
+  return false;
+}
 
 
 Set<String> bannedWords = {
@@ -122,7 +148,6 @@ Set<String> bannedWords = {
   "desnudo",
   "nudo",
   "nuda",
-  "2 girls 1 cup",
   "acrotomophilia",
   "alabama hot pocket",
   "alaskan pipeline",
@@ -375,7 +400,6 @@ Set<String> bannedWords = {
   "nymphomania",
   "octopussy",
   "omorashi",
-  "one cup two girls",
   "one guy one jar",
   "orgasm",
   "orgy",
@@ -491,7 +515,6 @@ Set<String> bannedWords = {
   "swastika",
   "swinger",
   "tainted love",
-  "tea bagging",
   "threesome",
   "throating",
   "thumbzilla",
@@ -513,7 +536,6 @@ Set<String> bannedWords = {
   "twat",
   "twink",
   "twinkie",
-  "two girls one cup",
   "undressing",
   "upskirt",
   "urethra play",
@@ -796,7 +818,6 @@ Set<String> bannedWords = {
   "cona",
   "consolo",
   "corno",
-  "cu",
   "dar o rabo",
   "dum raio",
   "esporra",
@@ -1660,7 +1681,6 @@ Set<String> bannedWords = {
   "de hoer spelen",
   "de hond uitlaten",
   "de koffer induiken",
-  "del",
   "de pijp uitgaan",
   "dombo",
   "draaikont",
@@ -1693,7 +1713,6 @@ Set<String> bannedWords = {
   "hoerenbuurt",
   "hoerenloper",
   "hoerig",
-  "hol",
   "hufter",
   "huisdealer",
   "johny",

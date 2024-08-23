@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sfs_editor/constants/color.dart';
+import 'package:sfs_editor/constants/strings.dart';
 import 'package:sfs_editor/core/in_app_purchase.dart';
 import 'package:sfs_editor/home.dart';
 import 'package:sfs_editor/screens/ai_tools_screens/ai_tools_screen.dart';
@@ -11,19 +14,27 @@ import 'package:sfs_editor/screens/settings_screen.dart';
 import 'package:sfs_editor/services/dark_mode_service.dart';
 
 class TabsScreen extends StatefulWidget {
-  const TabsScreen({super.key});
+  const TabsScreen({super.key,this.isEditor});
+  final bool? isEditor;
 
   @override
   State<TabsScreen> createState() => _TabsScreenState();
 }
 
 class _TabsScreenState extends State<TabsScreen> {
-  int selectedIndex = 1;
+  int? selectedIndex;
   List<Widget> pages = [];
   bool _isFetchOffersCalled = false;
 
   @override
   void initState() {
+    if(widget.isEditor != null){
+      if(widget.isEditor!){
+        selectedIndex = 0;
+      }
+    }else{
+      selectedIndex =1;
+    }
     pages = [
       const EditOptionScreen(),
       const MyHomePage(),
@@ -38,8 +49,13 @@ class _TabsScreenState extends State<TabsScreen> {
     if(!(InAppPurchase.isPro || InAppPurchase.isProAI)){
       if (!_isFetchOffersCalled) {
       _isFetchOffersCalled = true;
-      Future.delayed(const Duration(seconds: 2)).then((_) {
-        InAppPurchase.fetchOffers(context);
+      Future.delayed(const Duration(seconds: 2)).then((_) async{
+        bool hasInternet = await checkInternetConnection();
+              if(hasInternet){
+                InAppPurchase.fetchOffers(context);
+              }else{
+                showNoInternetDialog(context);
+              }
       },);
     }
     }
@@ -50,7 +66,7 @@ class _TabsScreenState extends State<TabsScreen> {
       selectedIndex = index;
     });
   }
-
+  
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -66,8 +82,13 @@ class _TabsScreenState extends State<TabsScreen> {
         ),
         actions: [
           ElevatedButton(
-            onPressed: () {
-              InAppPurchase.fetchOffers(context);
+            onPressed: () async{
+              bool hasInternet = await checkInternetConnection();
+              if(hasInternet){
+                InAppPurchase.fetchOffers(context);
+              }else{
+                showNoInternetDialog(context);
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: themeProvider.isDarkMode ? Colors.white : Colors.black,
@@ -110,7 +131,7 @@ class _TabsScreenState extends State<TabsScreen> {
             label: 'AI Tools',
           ),
         ],
-        currentIndex: selectedIndex,
+        currentIndex: selectedIndex ?? 1,
         selectedItemColor: Colors.pink,
         unselectedItemColor: themeProvider.isDarkMode ? Colors.white : Colors.black,
         onTap: onItemTapped,

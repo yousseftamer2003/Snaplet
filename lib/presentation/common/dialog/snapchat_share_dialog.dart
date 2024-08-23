@@ -136,7 +136,7 @@ class _SnapChatShareDialogState extends State<SnapChatShareDialog> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 5.w),
+                  SizedBox(width: isLoadingAd? 5.w : 25.w),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.yellow,

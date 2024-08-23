@@ -211,194 +211,62 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return Scaffold(
-      backgroundColor: themeProvider.isDarkMode ? darkMoodColor : Colors.white,
-      appBar: AppBar(
-        backgroundColor:
-            themeProvider.isDarkMode ? darkMoodColor : Colors.white,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/starryImages/snaplet-logo high small3 edited.png',
-              width: 35,
-            ),
-            const Text(
-              'Snaplet',
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            SizedBox(
-              width: 52.w,
-            )
-          ],
-        ),
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          onPressed: () {
-            setState(() {
-              cropTrials =0 ;
-            });
-            Navigator.pop(context);
-          },
-          icon: const Icon(Icons.arrow_back),
-        ),
-      ),
-      body: SafeArea(
-          child: ScrollConfiguration(
-        behavior: NoOverscrollBehavior(),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
+      onTap: () {
+        FocusScope.of(context).requestFocus(FocusNode());
+      },
+      child: Scaffold(
+        backgroundColor: themeProvider.isDarkMode ? darkMoodColor : Colors.white,
+        appBar: AppBar(
+          backgroundColor:
+              themeProvider.isDarkMode ? darkMoodColor : Colors.white,
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                margin: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 20,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color:
-                      themeProvider.isDarkMode ? darkModeHeavey : Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.purple.withOpacity(0.7),
-                      spreadRadius: 2,
-                      blurRadius: 2,
-                      offset: const Offset(-1, -1),
-                    ),
-                    BoxShadow(
-                      color: Colors.pink.withOpacity(0.7),
-                      spreadRadius: 2,
-                      blurRadius: 2,
-                      offset: const Offset(1, 1),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  GradientText(
-                                    'Enter Prompt ',
-                                    gradient: const LinearGradient(
-                                      colors: [Colors.purple, Colors.pink],
-                                    ),
-                                    style: GoogleFonts.nunito(
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 24.sp),
-                                  ),
-                                  const Icon(Icons.edit, color: Colors.purple),
-                                ],
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 30.h,
-                          ),
-                          Form(
-                            key: formKey,
-                            child: TextFormField(
-                              controller: promptController,
-                              maxLines: null,
-                              inputFormatters: [
-                                          FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s!+-_@#$%^&*(),.?":{}|<>]'),),
-                              ],
-                              decoration: InputDecoration(
-                                labelStyle: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 25.sp,
-                                ),
-                                hintText:
-                                    'Type here a detailed description for what you want to see in your artwork',
-                                helperText: 'Only English letters, numbers, and symbols are allowed.',
-                                hintStyle: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: themeProvider.isDarkMode
-                                        ? Colors.white.withOpacity(0.4)
-                                        : Colors.black.withOpacity(0.4),
-                                    fontSize: 14.sp),
-                                hintMaxLines: 3,
-                                border: InputBorder.none,
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                                floatingLabelBehavior:
-                                    FloatingLabelBehavior.always,
-                                contentPadding:
-                                    const EdgeInsets.symmetric(vertical: 20.0),
-                              ),
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: themeProvider.isDarkMode
-                                      ? Colors.white
-                                      : Colors.black),
-                                      onSaved: (value) async{
-                                        setState(()  {
-                                          isAppropriate =  isContentAppropriate(value!);
-                                        });
-                                      },
-                            ),
-                          ),
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              SizedBox(
-                                width: 10,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+              Image.asset(
+                'assets/starryImages/snaplet-logo high small3 edited.png',
+                width: 35,
+              ),
+              const Text(
+                'Snaplet',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-              Row(
-                children: [
-                  SizedBox(width: 20.w),
-                  Text(
-                    'Select ',
-                    style:
-                        TextStyle(fontWeight: FontWeight.w700, fontSize: 19.sp),
-                  ),
-                  GradientText(
-                    'Image to generate from',
-                    gradient: const LinearGradient(
-                      colors: [Colors.purple, Colors.pink],
-                    ),
-                    style:
-                        TextStyle(fontWeight: FontWeight.w700, fontSize: 19.sp),
-                  ),
-                ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  pickImage();
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 8,
-                  ),
+              SizedBox(
+                width: 52.w,
+              )
+            ],
+          ),
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            onPressed: () {
+              setState(() {
+                cropTrials =0 ;
+              });
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
+        ),
+        body: SafeArea(
+            child: ScrollConfiguration(
+          behavior: NoOverscrollBehavior(),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(8),
                   margin: const EdgeInsets.symmetric(
                     vertical: 8,
                     horizontal: 20,
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: themeProvider.isDarkMode
-                        ? darkModeHeavey
-                        : Colors.white,
+                    color:
+                        themeProvider.isDarkMode ? darkModeHeavey : Colors.white,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.purple.withOpacity(0.7),
@@ -414,327 +282,471 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                       ),
                     ],
                   ),
-                  child: Center(
-                    child: base64Image == null
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              widget.resuseImage == null
-                                  ? Image.asset(
-                                      'assets/starryImages/2.png',
-                                      height: 200,
-                                      color: themeProvider.isDarkMode
-                                          ? Colors.white
-                                          : null,
-                                    )
-                                  : Container(
-                                      width: 150,
-                                      height: 150,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(
-                                          color: Colors.pink,
-                                          width: 1,
-                                        ),
-                                        image: DecorationImage(
-                                          image:
-                                              MemoryImage(widget.resuseImage!),
-                                          fit: BoxFit.fill,
-                                        ),
-                                      ),
-                                    ),
-                              widget.resuseImage == null
-                                  ? GradientText(
-                                      'Choose Image',
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    GradientText(
+                                      'Enter Prompt ',
                                       gradient: const LinearGradient(
                                         colors: [Colors.purple, Colors.pink],
                                       ),
-                                      style: TextStyle(
+                                      style: GoogleFonts.nunito(
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 22.sp),
-                                    )
-                                  : const Text(''),
-                            ],
-                          )
-                        : Column(
-                            children: [
-                              Container(
-                                width: 150,
-                                height: 150,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(
-                                    color: Colors.pink,
-                                    width: 1,
-                                  ),
-                                  image: DecorationImage(
-                                    image:
-                                        MemoryImage(base64Decode(base64Image!)),
-                                    fit: BoxFit.fill,
-                                  ),
+                                          fontSize: 24.sp),
+                                    ),
+                                    const Icon(Icons.edit, color: Colors.purple),
+                                  ],
                                 ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 30.h,
+                            ),
+                            Form(
+                              key: formKey,
+                              child: TextFormField(
+                                controller: promptController,
+                                maxLines: null,
+                                inputFormatters: [
+                                            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s!+-_@#$%^&*(),.?":{}|<>]'),),
+                                ],
+                                decoration: InputDecoration(
+                                  labelStyle: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 25.sp,
+                                  ),
+                                  hintText:
+                                      'Type here a detailed description for what you want to see in your artwork',
+                                  helperText: 'Only English letters, numbers, and symbols are allowed.',
+                                  hintStyle: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: themeProvider.isDarkMode
+                                          ? Colors.white.withOpacity(0.4)
+                                          : Colors.black.withOpacity(0.4),
+                                      fontSize: 14.sp),
+                                  hintMaxLines: 3,
+                                  border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                  contentPadding:
+                                      const EdgeInsets.symmetric(vertical: 20.0),
+                                ),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: themeProvider.isDarkMode
+                                        ? Colors.white
+                                        : Colors.black),
+                                        onSaved: (value) async{
+                                          setState(()  {
+                                            isAppropriate =  isContentAppropriate(value!);
+                                          });
+                                        },
                               ),
-                              isAspectRatioEqual
-                                  ? const SizedBox()
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(
-                                          Icons.warning_amber_outlined,
-                                          color: Colors.red,
-                                        ),
-                                        Text(
-                                          cropTrials < 1? 'the image\'s aspect ratio has to be 1:1' : 'check you have done it 1:1 please',
-                                          style: const TextStyle(
-                                            color: Colors.red,
+                            ),
+                            const Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SizedBox(
+                                  width: 10,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Row(
+                  children: [
+                    SizedBox(width: 20.w),
+                    Text(
+                      'Select ',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 19.sp),
+                    ),
+                    GradientText(
+                      'Image to generate from',
+                      gradient: const LinearGradient(
+                        colors: [Colors.purple, Colors.pink],
+                      ),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 19.sp),
+                    ),
+                  ],
+                ),
+                GestureDetector(
+                  onTap: () {
+                    pickImage();
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 8,
+                    ),
+                    margin: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 20,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: themeProvider.isDarkMode
+                          ? darkModeHeavey
+                          : Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.purple.withOpacity(0.7),
+                          spreadRadius: 2,
+                          blurRadius: 2,
+                          offset: const Offset(-1, -1),
+                        ),
+                        BoxShadow(
+                          color: Colors.pink.withOpacity(0.7),
+                          spreadRadius: 2,
+                          blurRadius: 2,
+                          offset: const Offset(1, 1),
+                        ),
+                      ],
+                    ),
+                    child: Center(
+                      child: base64Image == null
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                widget.resuseImage == null
+                                    ? Image.asset(
+                                        'assets/starryImages/2.png',
+                                        height: 200,
+                                        color: themeProvider.isDarkMode
+                                            ? Colors.white
+                                            : null,
+                                      )
+                                    : Container(
+                                        width: 150,
+                                        height: 150,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(20),
+                                          border: Border.all(
+                                            color: Colors.pink,
+                                            width: 1,
+                                          ),
+                                          image: DecorationImage(
+                                            image:
+                                                MemoryImage(widget.resuseImage!),
+                                            fit: BoxFit.fill,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                              isAspectRatioEqual
-                                  ? const SizedBox()
-                                  : ElevatedButton(
-                                      onPressed: () async {
-                                        cropTrials++;
-                                        final croppedImage = await Navigator.of(
-                                                context)
-                                            .push(MaterialPageRoute(
-                                                builder: (ctx) => ImageCropper(
-                                                    image: base64Decode(
-                                                        base64Image!))));
-                                        img.Image? decodedImage =
-                                            img.decodeImage(croppedImage);
-                                        setState(() {
-                                          base64Image =
-                                              base64Encode(croppedImage);
-                                          if (decodedImage!.width ==
-                                              decodedImage.height) {
-                                            isAspectRatioEqual = true;
-                                          }
-                                        });
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.black,
-                                        foregroundColor: Colors.white,
                                       ),
-                                      child: const Text('Go crop'))
-                            ],
-                          ),
+                                widget.resuseImage == null
+                                    ? GradientText(
+                                        'Choose Image',
+                                        gradient: const LinearGradient(
+                                          colors: [Colors.purple, Colors.pink],
+                                        ),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 22.sp),
+                                      )
+                                    : const Text(''),
+                              ],
+                            )
+                          : Column(
+                              children: [
+                                Container(
+                                  width: 150,
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                      color: Colors.pink,
+                                      width: 1,
+                                    ),
+                                    image: DecorationImage(
+                                      image:
+                                          MemoryImage(base64Decode(base64Image!)),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                                isAspectRatioEqual
+                                    ? const SizedBox()
+                                    : Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Icon(
+                                            Icons.warning_amber_outlined,
+                                            color: Colors.red,
+                                          ),
+                                          Text(
+                                            cropTrials < 1? 'the image\'s aspect ratio has to be 1:1' : 'check you have done it 1:1 please',
+                                            style: const TextStyle(
+                                              color: Colors.red,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                isAspectRatioEqual
+                                    ? const SizedBox()
+                                    : ElevatedButton(
+                                        onPressed: () async {
+                                          cropTrials++;
+                                          final croppedImage = await Navigator.of(
+                                                  context)
+                                              .push(MaterialPageRoute(
+                                                  builder: (ctx) => ImageCropper(
+                                                      image: base64Decode(
+                                                          base64Image!))));
+                                          img.Image? decodedImage =
+                                              img.decodeImage(croppedImage);
+                                          setState(() {
+                                            base64Image =
+                                                base64Encode(croppedImage);
+                                            if (decodedImage!.width ==
+                                                decodedImage.height) {
+                                              isAspectRatioEqual = true;
+                                            }
+                                          });
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.black,
+                                          foregroundColor: Colors.white,
+                                        ),
+                                        child: const Text('Go crop'))
+                              ],
+                            ),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Container(
-                margin: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                ),
-                child: ElevatedButton(
-                  onPressed: isButtonEnabled &&
-                          (base64Image != null || widget.resuseImage != null) &&
-                          isAspectRatioEqual
-                      ? () {
-                        if (formKey.currentState!.validate()) {
-                                  formKey.currentState!.save();
-                                }
-                                if(isAppropriate){
-                                  if (freeAttempts <= 2) {
-                            if(InAppPurchase.isPro || InAppPurchase.isProAI){
-                                    generateImage();
-                                  }else{
-                                    Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
+                const SizedBox(height: 10),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                  ),
+                  child: ElevatedButton(
+                    onPressed: isButtonEnabled &&
+                            (base64Image != null || widget.resuseImage != null) &&
+                            isAspectRatioEqual
+                        ? () async{
+                          if (formKey.currentState!.validate()) {
+                                    formKey.currentState!.save();
                                   }
-                          } else {
-                            showMyDialog(context);
-                          }
-                                }else{
-                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
-                                }
-                                if (formKey.currentState!.validate()) {
-                                  formKey.currentState!.save();
-                                }
-                        }
-                      : null,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 17,
-                      horizontal: 17,
-                    ),
-                    backgroundColor:
-                        isButtonEnabled ? Colors.black : Colors.grey,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Generate',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 19.sp),
-                        ),
-                      ),
-                      const Align(
-                        alignment: Alignment.centerRight,
-                        child: Icon(
-                          Icons.arrow_forward,
-                          size: 30,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  const SizedBox(width: 18),
-                  Text(
-                    'Choose a ',
-                    style:
-                        TextStyle(fontWeight: FontWeight.w700, fontSize: 23.sp),
-                  ),
-                  GradientText(
-                    'Style',
-                    gradient: const LinearGradient(
-                      colors: [Colors.purple, Colors.pink],
-                    ),
-                    style:
-                        TextStyle(fontWeight: FontWeight.w700, fontSize: 23.sp),
-                  ),
-                  const Text(
-                    '(Optional)',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  )
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8,
-                  horizontal: 18,
-                ),
-                child: SizedBox(
-                  height: 280,
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 15,
-                      mainAxisSpacing: 22,
-                      childAspectRatio: 10 / 8,
-                    ),
-                    itemCount: widget.imagetoImage.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                      bool isSelected = selectedIndex == index;
-                      bool isLocked = widget.imagetoImage[index].family ==
-                              'stable-diffusion-xl' &&
-                          !InAppPurchase.isProAI;
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            if (selectedIndex == index) {
-                              selectedIndex = null;
-                              selectedModel = AiModels(
-                                id: 'stable-diffusion-xl-v1-0',
-                                name: 'Stable Diffusion XL',
-                                family: 'stable-diffusion-xl',
-                                piplines: [
-                                  "text-to-image",
-                                  "image-to-image",
-                                  "inpaint"
-                                ],
-                              );
+                                  if(isAppropriate){
+                                    if (freeAttempts <= 2) {
+                              if(InAppPurchase.isPro || InAppPurchase.isProAI){
+                                      bool hasInternet = await checkInternetConnection();
+                                        if(hasInternet){
+                                          generateImage();
+                                        }else{
+                                          // ignore: use_build_context_synchronously
+                                          showNoInternetDialog(context);
+                                        }
+                                    }else{
+                                      Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
+                                    }
                             } else {
-                              selectedIndex = index;
-                              selectedModel = widget.imagetoImage[index];
+                              showMyDialog(context);
                             }
-                          });
-                        },
-                        child: Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15.0),
-                              child: Image.asset(
-                                images[index],
-                                fit: BoxFit.fill,
-                                width: double.infinity,
-                                height: double.infinity,
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15.0),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Colors.black.withOpacity(0.6),
-                                    Colors.transparent,
+                                  }else{
+                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
+                                  }
+                                  if (formKey.currentState!.validate()) {
+                                    formKey.currentState!.save();
+                                  }
+                          }
+                        : null,
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 17,
+                        horizontal: 17,
+                      ),
+                      backgroundColor:
+                          isButtonEnabled ? Colors.black : Colors.grey,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            'Generate',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 19.sp),
+                          ),
+                        ),
+                        const Align(
+                          alignment: Alignment.centerRight,
+                          child: Icon(
+                            Icons.arrow_forward,
+                            size: 30,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    const SizedBox(width: 18),
+                    Text(
+                      'Choose a ',
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 23.sp),
+                    ),
+                    GradientText(
+                      'Style',
+                      gradient: const LinearGradient(
+                        colors: [Colors.purple, Colors.pink],
+                      ),
+                      style:
+                          TextStyle(fontWeight: FontWeight.w700, fontSize: 23.sp),
+                    ),
+                    const Text(
+                      '(Optional)',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 18,
+                  ),
+                  child: SizedBox(
+                    height: 280,
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 15,
+                        mainAxisSpacing: 22,
+                        childAspectRatio: 10 / 8,
+                      ),
+                      itemCount: widget.imagetoImage.length,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        bool isSelected = selectedIndex == index;
+                        bool isLocked = widget.imagetoImage[index].family ==
+                                'stable-diffusion-xl' &&
+                            !InAppPurchase.isProAI;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              if (selectedIndex == index) {
+                                selectedIndex = null;
+                                selectedModel = AiModels(
+                                  id: 'stable-diffusion-xl-v1-0',
+                                  name: 'Stable Diffusion XL',
+                                  family: 'stable-diffusion-xl',
+                                  piplines: [
+                                    "text-to-image",
+                                    "image-to-image",
+                                    "inpaint"
                                   ],
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
+                                );
+                              } else {
+                                selectedIndex = index;
+                                selectedModel = widget.imagetoImage[index];
+                              }
+                            });
+                          },
+                          child: Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(15.0),
+                                child: Image.asset(
+                                  images[index],
+                                  fit: BoxFit.fill,
+                                  width: double.infinity,
+                                  height: double.infinity,
                                 ),
                               ),
-                            ),
-                            Positioned(
-                              bottom: 10,
-                              left: 10,
-                              right: 10,
-                              child: Text(
-                                widget.imagetoImage[index].name,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 12.sp,
-                                  color: Colors.white,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            if (isSelected)
                               Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15.0),
-                                  border: Border.all(
-                                    color: Colors.pink,
-                                    width: 2,
-                                  ),
-                                ),
-                              ),
-                            if (isLocked)
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(16.0),
-                                  color: Colors.grey.withOpacity(0.8),
-                                ),
-                                child: const Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.lock),
-                                      Text(
-                                        'Pro',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.black.withOpacity(0.6),
+                                      Colors.transparent,
                                     ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
                                   ),
                                 ),
                               ),
-                          ],
-                        ),
-                      );
-                    },
+                              Positioned(
+                                bottom: 10,
+                                left: 10,
+                                right: 10,
+                                child: Text(
+                                  widget.imagetoImage[index].name,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 12.sp,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              if (isSelected)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    border: Border.all(
+                                      color: Colors.pink,
+                                      width: 2,
+                                    ),
+                                  ),
+                                ),
+                              if (isLocked)
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16.0),
+                                    color: Colors.grey.withOpacity(0.8),
+                                  ),
+                                  child: const Center(
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.lock),
+                                        Text(
+                                          'Pro',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      )),
+        )),
+      ),
     );
   }
 }

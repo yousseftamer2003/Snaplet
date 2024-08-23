@@ -38,7 +38,7 @@ class ResultScreen extends StatefulWidget {
 }
 
 class _ResultScreenState extends State<ResultScreen> {
-  late VideoPlayerController _videoController;
+  VideoPlayerController? _videoController;
   Uint8List? watermarkedImage;
   bool isSwitched = InAppPurchase.isPro || InAppPurchase.isProAI;
   bool isEditor = false;
@@ -117,8 +117,8 @@ class _ResultScreenState extends State<ResultScreen> {
       _videoController = VideoPlayerController.file(widget.editedvideo!)
         ..initialize().then((_) {
           setState(() {});
-          _videoController.play();
-          _videoController.setLooping(true);
+          _videoController!.play();
+          _videoController!.setLooping(true);
         });
     }
   }
@@ -169,6 +169,12 @@ class _ResultScreenState extends State<ResultScreen> {
   );
 }
 
+@override
+  void dispose() {
+    _videoController!.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -203,9 +209,20 @@ class _ResultScreenState extends State<ResultScreen> {
           automaticallyImplyLeading: false,
           leading: IconButton(
             onPressed: () {
-              Navigator.of(context).push(
+              if(widget.editedvideo != null){
+                              if(_videoController!.value.isInitialized){
+                              _videoController!.pause();
+                            }
+                            }
+                            if(isEditor || widget.isVid){
+                              Navigator.of(context).push(
+                              MaterialPageRoute(builder: (ctx)=> const TabsScreen(isEditor: true,))
+                            );
+                            }else{
+                              Navigator.of(context).push(
                               MaterialPageRoute(builder: (ctx)=> const TabsScreen())
                             );
+                            }
             },
             icon: const Icon(Icons.arrow_back),
           ),
@@ -250,14 +267,14 @@ class _ResultScreenState extends State<ResultScreen> {
                               image: widget.editedvideo == null
                                   ? DecorationImage(
                                       image: MemoryImage(recievedImage!),
-                                      fit: BoxFit.fill)
+                                      fit: BoxFit.cover)
                                   : null,
                             ),
                             child: widget.editedvideo != null
                                 ? AspectRatio(
                                     aspectRatio:
-                                        _videoController.value.aspectRatio,
-                                    child: VideoPlayer(_videoController),
+                                        _videoController!.value.aspectRatio,
+                                    child: VideoPlayer(_videoController!),
                                   )
                                 : null,
                           ),
@@ -402,80 +419,85 @@ class _ResultScreenState extends State<ResultScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          ElevatedButton(
-                                              onPressed: () {
-                                                if(InAppPurchase.isPro || InAppPurchase.isProAI){
-                                                  if(widget.editedvideo != null){
-                                                    SnapChatHelper.sendVideoToSnapChat(widget.editedvideo,context);
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              vertical: 20
+                                            ),
+                                            child: ElevatedButton(
+                                                onPressed: () {
+                                                  if(InAppPurchase.isPro || InAppPurchase.isProAI){
+                                                    if(widget.editedvideo != null){
+                                                      SnapChatHelper.sendVideoToSnapChat(widget.editedvideo,context);
+                                                    }else{
+                                                      SnapChatHelper.sendImageToSnapChat(recievedImage!,context);
+                                                    }
                                                   }else{
-                                                    SnapChatHelper.sendImageToSnapChat(recievedImage!,context);
-                                                  }
-                                                }else{
-                                                  if (widget.editedvideo != null) {
-                                                  showDialog(
-                                                    context: context,
-                                                    builder: (context) =>
-                                                        SnapChatShareDialog(
-                                                      onTapShare: () {
-                                                        SnapChatHelper
-                                                            .sendVideoToSnapChat(
-                                                                widget
-                                                                    .editedvideo,
-                                                                context);
-                                                      },
-                                                    ),
-                                                  );
-                                                } else if (recievedImage !=
-                                                    null) {
-                                                  if (isSwitched) {
+                                                    if (widget.editedvideo != null) {
                                                     showDialog(
                                                       context: context,
                                                       builder: (context) =>
                                                           SnapChatShareDialog(
                                                         onTapShare: () {
                                                           SnapChatHelper
-                                                              .sendImageToSnapChat(
-                                                                  recievedImage!,
+                                                              .sendVideoToSnapChat(
+                                                                  widget
+                                                                      .editedvideo,
                                                                   context);
                                                         },
                                                       ),
                                                     );
-                                                  } else {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) =>
-                                                          SnapChatShareDialog(
-                                                        onTapShare: () {
-                                                          SnapChatHelper
-                                                              .sendImageToSnapChat(
-                                                                  watermarkedImage!,
-                                                                  context);
-                                                        },
-                                                      ),
-                                                    );
+                                                  } else if (recievedImage !=
+                                                      null) {
+                                                    if (isSwitched) {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            SnapChatShareDialog(
+                                                          onTapShare: () {
+                                                            SnapChatHelper
+                                                                .sendImageToSnapChat(
+                                                                    recievedImage!,
+                                                                    context);
+                                                          },
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      showDialog(
+                                                        context: context,
+                                                        builder: (context) =>
+                                                            SnapChatShareDialog(
+                                                          onTapShare: () {
+                                                            SnapChatHelper
+                                                                .sendImageToSnapChat(
+                                                                    watermarkedImage!,
+                                                                    context);
+                                                          },
+                                                        ),
+                                                      );
+                                                    }
                                                   }
-                                                }
-                                                }
-                                                
-                                              },
-                                              style: ElevatedButton.styleFrom(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 8,
-                                                        horizontal: 10),
-                                                backgroundColor: Colors.black,
-                                                foregroundColor:
-                                                    const Color.fromARGB(
-                                                        255, 216, 213, 213),
-                                              ),
-                                              child: const Text(
-                                                'share live Snap',
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 20,
+                                                  }
+                                                  
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  padding:
+                                                      const EdgeInsets.symmetric(
+                                                          vertical: 8,
+                                                          horizontal: 10),
+                                                  backgroundColor: Colors.black,
+                                                  foregroundColor:
+                                                      const Color.fromARGB(
+                                                          255, 216, 213, 213),
                                                 ),
-                                              )
-                                              ),
+                                                child: const Text(
+                                                  'share live Snap',
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w700,
+                                                    fontSize: 20,
+                                                  ),
+                                                )
+                                                ),
+                                          ),
                                           ElevatedButton(
                                               onPressed: () async {
                                                 if (recievedImage != null) {
@@ -547,9 +569,20 @@ class _ResultScreenState extends State<ResultScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.of(context).push(
+                            if(widget.editedvideo != null){
+                              if(_videoController!.value.isInitialized){
+                              _videoController!.pause();
+                            }
+                            }
+                            if(isEditor || widget.isVid){
+                              Navigator.of(context).push(
+                              MaterialPageRoute(builder: (ctx)=> const TabsScreen(isEditor: true,))
+                            );
+                            }else{
+                              Navigator.of(context).push(
                               MaterialPageRoute(builder: (ctx)=> const TabsScreen())
                             );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             padding: const EdgeInsets.symmetric(

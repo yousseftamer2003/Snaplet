@@ -19,11 +19,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _controller = VideoPlayerController.asset('assets/videos/newsplash.mp4')
       ..initialize().then((_) {
+        _controller.setPlaybackSpeed(2.0);
         setState(() {});
         _controller.play();
       });
 
-    Timer(const Duration(seconds: 11), () {
+    Timer(const Duration(seconds: 6), () {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
         builder: (context) => const OnBoardingCheck(),
       ));
