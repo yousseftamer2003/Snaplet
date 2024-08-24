@@ -37,7 +37,7 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access the gallery to choose the image or video you would edit.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Access the camera</string>
+	<string>Access the camera to choose the image or video you would edit.</string>
 	<key>SCSDKClientId</key>
 	<string>3668ea85-8078-476e-a2cd-e4f914122ff5</string>
 	<key>SKAdNetworkItems</key>
