@@ -169,14 +169,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   
   bool isContentAppropriate(String prompt) {
-    for (var word in  bannedWords) {
-    if (prompt.toLowerCase().contains(word.toLowerCase())) {
+  for (var word in bannedWords) {
+    RegExp regex = RegExp(r'\b' + RegExp.escape(word) + r'\b', caseSensitive: false);
+    if (regex.hasMatch(prompt)) {
       return false;
     }
   }
-  
   return true;
-  }
+}
 
 
   @override
@@ -481,7 +481,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     formKey.currentState!.save();
                                   }
                                   if(isAppropriate){
-                                    if (freeAttempts <= 2) {
+                                    if (freeAttempts <= 5) {
                                     if (InAppPurchase.isPro || InAppPurchase.isProAI) {
                                         bool hasInternet = await checkInternetConnection();
                                         if(hasInternet){

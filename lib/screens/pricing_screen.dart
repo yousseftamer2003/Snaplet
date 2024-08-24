@@ -21,6 +21,8 @@ class _PricingScreenState extends State<PricingScreen> {
   final loading = ValueNotifier(false);
   late final Future<CustomerInfo> restorePurchasesFuture;
   List<Package> packages = [];
+  Offering? offering;
+  dynamic offerings;
   String _getTodayDateString() {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -30,6 +32,7 @@ class _PricingScreenState extends State<PricingScreen> {
 
   @override
   void initState() {
+    fetchOffers();
     restorePurchasesFuture = Purchases.restorePurchases();
     super.initState();
   }
@@ -60,17 +63,7 @@ class _PricingScreenState extends State<PricingScreen> {
   }
 
   Future<void> fetchOffers() async {
-    final offerings = await Purchases.getOfferings();
-
-    Offering? offering;
-    if (isSwitched) {
-      offering = offerings.getOffering("premium_subscription_group");
-    } else {
-      offering = offerings.getOffering("pro AI");
-    }
-    setState(() {
-      packages = offering!.availablePackages;
-    });
+    offerings = await Purchases.getOfferings();
   }
 
   List<String> images = [
@@ -254,11 +247,18 @@ class _PricingScreenState extends State<PricingScreen> {
                     ),
                     Switch(
                         value: isSwitched,
-                        onChanged: (value) async{
-                          await fetchOffers();
+                        onChanged: (value){
                           setState(() {
                             isSwitched = !isSwitched;
                           });
+                          if (isSwitched) {
+      offering = offerings.getOffering("premium_subscription_group");
+    } else {
+      offering = offerings.getOffering("pro AI");
+    }
+    setState(() {
+      packages = offering!.availablePackages;
+    });
                         }),
                   ],
                 ),

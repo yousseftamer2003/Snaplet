@@ -141,8 +141,8 @@ class InAppPurchase {
     }
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text("Error fetching offerings: $e"),
+      const SnackBar(
+        content: Text("Error fetching offerings"),
         behavior: SnackBarBehavior.floating,
       ),
     );
