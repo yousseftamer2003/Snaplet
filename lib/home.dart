@@ -481,7 +481,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     formKey.currentState!.save();
                                   }
                                   if(isAppropriate){
-                                    if (freeAttempts <= 2) {
+                                    if (freeAttempts <= 5) {
                                     if (InAppPurchase.isPro || InAppPurchase.isProAI) {
                                         bool hasInternet = await checkInternetConnection();
                                         if(hasInternet){
