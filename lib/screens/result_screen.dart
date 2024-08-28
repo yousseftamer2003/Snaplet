@@ -80,8 +80,9 @@ class _ResultScreenState extends State<ResultScreen> {
   Future<void> saveImage(Uint8List imageData) async {
     final status = await Permission.storage.request();
     if (status.isGranted) {
-      final result = await ImageGallerySaver.saveImage(imageData);
+      final result = await ImageGallerySaver.saveImage(imageData,quality: 100);
       final isSuccess = result["isSuccess"];
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(

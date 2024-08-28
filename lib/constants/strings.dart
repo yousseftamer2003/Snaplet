@@ -132,6 +132,8 @@ Set<String> bannedWords = {
   'p*ssy',
   'p@ssy',
   'faggot',
+  'girl hot',
+  
   'gay',
   'gilf',
   'lesbian',
@@ -689,7 +691,6 @@ Set<String> bannedWords = {
   "arsle",
   "brutta",
   "discofitta",
-  "fan",
   "fitta",
   "fittig",
   "för helvete",
