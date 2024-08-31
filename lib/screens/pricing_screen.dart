@@ -1,3 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +27,7 @@ class _PricingScreenState extends State<PricingScreen> {
   List<Package> packages = [];
   Offering? offering;
   dynamic offerings;
+  String store = Platform.isAndroid ? 'Google play' : 'ItunesAccount';
   String _getTodayDateString() {
     final DateTime now = DateTime.now();
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
@@ -202,7 +207,7 @@ class _PricingScreenState extends State<PricingScreen> {
                                 ),
                               ),
                               Text(
-                                'Starting from today Trial period for 3 days ${packageToString(!isSwitched ? widget.packages[selectedProduct] : packages[selectedProduct])} Starting from ${_getTodayDateString()} You can pay at any time on the Google Play subscriptions page.No charges will be made if you cancel the subscription before the end of the trial period, and a reminder will be sent to you two days before the trial ends.',
+                                'Starting from today Trial period for 3 days ${packageToString(!isSwitched ? widget.packages[selectedProduct] : packages[selectedProduct])} Starting from ${_getTodayDateString()} You can pay at any time on the $store subscriptions page.No charges will be made if you cancel the subscription before the end of the trial period, and a reminder will be sent to you two days before the trial ends.',
                                 style: const TextStyle(color: Colors.black),
                               ),
                             ],
