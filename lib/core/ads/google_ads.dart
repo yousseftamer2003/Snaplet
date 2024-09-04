@@ -43,12 +43,10 @@ class GoogleAds {
           ? "ca-app-pub-1804755983693905/5821412473" // Android Release Key
           : "ca-app-pub-1804755983693905/5890900511"; // iOS Release Key
 
-  String get interstitialAdUnitId => kDebugMode
-      ? "/6499/example/interstitial" // Debug Key (Test Ad "Combine both os")
-      : Platform.isAndroid
-          // Realease Key
-          ? "ca-app-pub-3523762960785202/4459387396" // Android Release Key
-          : "ca-app-pub-3523762960785202/3721020799"; // iOS Release Key
+  String get interstitialAdUnitId => Platform.isAndroid
+    ? "ca-app-pub-3523762960785202/4459387396" // Android Release Key
+    : "ca-app-pub-3523762960785202/3721020799"; // iOS Release Key
+
 
   String get nativeAdUnitId => kDebugMode
       ? "/6499/example/native" // Debug Key

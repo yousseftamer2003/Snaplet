@@ -20,7 +20,7 @@ class _SnapChatShareDialogState extends State<SnapChatShareDialog> {
   bool isLoadingAd = false;
   final adUnitId = Platform.isAndroid
       ? 'ca-app-pub-3523762960785202/7946213982' 
-      : 'ca-app-pub-3523762960785202/6581161424'; 
+      : 'ca-app-pub-3523762960785202/2470899756'; 
 
   void loadAd() {
     setState(() {
