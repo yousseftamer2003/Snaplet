@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:sfs_editor/constants/color.dart';
 import 'package:sfs_editor/core/helper/snapchat_helper.dart';
 import 'package:sfs_editor/core/in_app_purchase.dart';
+import 'package:sfs_editor/home.dart';
 import 'package:sfs_editor/presentation/common/dialog/snapchat_share_dialog.dart';
 import 'package:sfs_editor/screens/image_to_image_screen.dart';
 import 'package:sfs_editor/screens/tabs_screen.dart';
@@ -27,7 +28,11 @@ import 'package:image/image.dart' as img;
 
 class ResultScreen extends StatefulWidget {
   const ResultScreen(
-      {super.key, this.editedvideo, this.editedImage, this.isEditor,required this.isVid});
+      {super.key,
+      this.editedvideo,
+      this.editedImage,
+      this.isEditor,
+      required this.isVid});
   final File? editedvideo;
   final Uint8List? editedImage;
   final bool? isEditor;
@@ -43,7 +48,7 @@ class _ResultScreenState extends State<ResultScreen> {
   bool isSwitched = InAppPurchase.isPro || InAppPurchase.isProAI;
   bool isEditor = false;
   Uint8List? recievedImage;
-
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   Future<void> makeWaterMark(Uint8List imageData) async {
     final watermarkData =
         await rootBundle.load('assets/starryImages/Snaplet water mark .png');
@@ -56,7 +61,7 @@ class _ResultScreenState extends State<ResultScreen> {
       watermarkedImage = img.encodePng(image);
     }
   }
-  
+
   Future<void> saveVideoToGallery(String url) async {
     final status = await Permission.storage.request();
     if (status.isGranted) {
@@ -80,7 +85,7 @@ class _ResultScreenState extends State<ResultScreen> {
   Future<void> saveImage(Uint8List imageData) async {
     final status = await Permission.storage.request();
     if (status.isGranted) {
-      final result = await ImageGallerySaver.saveImage(imageData,quality: 100);
+      final result = await ImageGallerySaver.saveImage(imageData, quality: 100);
       final isSuccess = result["isSuccess"];
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -111,8 +116,8 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   void initState() {
     super.initState();
-    if(!(InAppPurchase.isPro || InAppPurchase.isProAI)){
-      Provider.of<RewardAdsService>(context,listen: false).loadAd();
+    if (!(InAppPurchase.isPro || InAppPurchase.isProAI)) {
+      Provider.of<RewardAdsService>(context, listen: false).loadAd();
     }
     if (widget.editedvideo != null) {
       _videoController = VideoPlayerController.file(widget.editedvideo!)
@@ -123,72 +128,72 @@ class _ResultScreenState extends State<ResultScreen> {
         });
     }
   }
-  void changeSwitch(){
+
+  void changeSwitch() {
     setState(() {
       isSwitched = !isSwitched;
     });
   }
 
   Future<void> sendEmail(Uint8List? recievedImage) async {
-  if (recievedImage == null) {
-    
-    return;
+    if (recievedImage == null) {
+      return;
+    }
+
+    final Directory tempDir = await getTemporaryDirectory();
+
+    final String filePath = '${tempDir.path}/image.png';
+    final File imageFile = File(filePath);
+    await imageFile.writeAsBytes(recievedImage);
+
+    final Email email = Email(
+      body: '',
+      subject: 'Report inappropriate content',
+      recipients: ['Moatazforads@gmail.com'],
+      isHTML: false,
+      attachmentPaths: [filePath],
+    );
+
+    String platformResponse;
+
+    try {
+      await FlutterEmailSender.send(email);
+      platformResponse = 'success';
+    } catch (error) {
+      log('$error');
+      platformResponse = error.toString();
+    }
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(platformResponse),
+      ),
+    );
   }
 
-  
-  final Directory tempDir = await getTemporaryDirectory();
-
-  final String filePath = '${tempDir.path}/image.png';
-  final File imageFile = File(filePath);
-  await imageFile.writeAsBytes(recievedImage);
-
-  
-  final Email email = Email(
-    body: '',
-    subject: 'Report inappropriate content',
-    recipients: ['Moatazforads@gmail.com'],
-    isHTML: false,
-    attachmentPaths: [filePath],
-  );
-
-  String platformResponse;
-
-  try {
-    await FlutterEmailSender.send(email);
-    platformResponse = 'success';
-  } catch (error) {
-    log('$error');
-    platformResponse = error.toString();
-  }
-
-  if (!mounted) return;
-
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(platformResponse),
-    ),
-  );
-}
-
-@override
+  @override
   void dispose() {
     _videoController!.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     // ignore: deprecated_member_use
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         return Future.value(false);
       },
       child: Scaffold(
-        backgroundColor: themeProvider.isDarkMode? darkMoodColor : Colors.white,
+        key: _scaffoldKey,
+        backgroundColor:
+            themeProvider.isDarkMode ? darkMoodColor : Colors.white,
         appBar: AppBar(
-          backgroundColor: themeProvider.isDarkMode? darkMoodColor : Colors.white,
+          backgroundColor:
+              themeProvider.isDarkMode ? darkMoodColor : Colors.white,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -210,20 +215,20 @@ class _ResultScreenState extends State<ResultScreen> {
           automaticallyImplyLeading: false,
           leading: IconButton(
             onPressed: () {
-              if(widget.editedvideo != null){
-                              if(_videoController!.value.isInitialized){
-                              _videoController!.pause();
-                            }
-                            }
-                            if(isEditor || widget.isVid){
-                              Navigator.of(context).push(
-                              MaterialPageRoute(builder: (ctx)=> const TabsScreen(isEditor: true,))
-                            );
-                            }else{
-                              Navigator.of(context).push(
-                              MaterialPageRoute(builder: (ctx)=> const TabsScreen())
-                            );
-                            }
+              if (widget.editedvideo != null) {
+                if (_videoController!.value.isInitialized) {
+                  _videoController!.pause();
+                }
+              }
+              if (isEditor || widget.isVid) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (ctx) => const TabsScreen(
+                          isEditor: true,
+                        )));
+              } else {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (ctx) => const TabsScreen()));
+              }
             },
             icon: const Icon(Icons.arrow_back),
           ),
@@ -239,21 +244,29 @@ class _ResultScreenState extends State<ResultScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       GeneratingWidget(),
-                      SizedBox(height: 5,),
+                      SizedBox(
+                        height: 5,
+                      ),
                       Text('generating...')
                     ],
                   ),
                 );
               } else {
                 isEditorCheck();
-                  if(widget.isVid){
-                    recievedImage =null;
-                  }else{
-                  recievedImage =
-                    isEditor ? widget.editedImage : getImageProvider.imageData;
+                if (widget.isVid) {
+                  recievedImage = null;
+                } else {
+                  recievedImage = isEditor
+                      ? widget.editedImage
+                      : getImageProvider.imageData;
                 }
-                if(recievedImage != null){
+                if (recievedImage != null) {
                   makeWaterMark(recievedImage!);
+                }
+                if (getImageProvider.isInappropriate) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _showDialog(context);
+                  });
                 }
                 return Column(
                   children: [
@@ -291,37 +304,39 @@ class _ResultScreenState extends State<ResultScreen> {
                         ],
                       ),
                     ),
-                  if(!(InAppPurchase.isPro || InAppPurchase.isProAI))
-                    Padding(
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Row(
-                            children: [
-                              Icon(Icons.auto_awesome),
-                              Text(
-                                'Remove Watermark',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                              Icon(
-                                Icons.lock,
-                                size: 13,
-                              )
-                            ],
-                          ),
-                          Switch(
-                            activeColor: Colors.white,
-                            activeTrackColor: Colors.black,
-                            value: isSwitched,
-                            onChanged: (value) {
-                              Provider.of<RewardAdsService>(context,listen: false).showAd(context, changeSwitch);
-                            },
-                          ),
-                        ],
+                    if (!(InAppPurchase.isPro || InAppPurchase.isProAI))
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 0, horizontal: 12),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(Icons.auto_awesome),
+                                Text(
+                                  'Remove Watermark',
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                                Icon(
+                                  Icons.lock,
+                                  size: 13,
+                                )
+                              ],
+                            ),
+                            Switch(
+                              activeColor: Colors.white,
+                              activeTrackColor: Colors.black,
+                              value: isSwitched,
+                              onChanged: (value) {
+                                Provider.of<RewardAdsService>(context,
+                                        listen: false)
+                                    .showAd(context, changeSwitch);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
                     const SizedBox(
                       height: 5,
                     ),
@@ -334,9 +349,11 @@ class _ResultScreenState extends State<ResultScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text('Report inappropriate contenret:'),
-                          ElevatedButton(onPressed: (){
-                            sendEmail(recievedImage);
-                          }, child: const Text('Report'))
+                          ElevatedButton(
+                              onPressed: () {
+                                sendEmail(recievedImage);
+                              },
+                              child: const Text('Report'))
                         ],
                       ),
                     ),
@@ -349,14 +366,15 @@ class _ResultScreenState extends State<ResultScreen> {
                         CustomRoundedButon(
                           onTap: () async {
                             if (widget.editedvideo == null) {
-                              if(InAppPurchase.isPro || InAppPurchase.isProAI){
-                              saveImage(recievedImage!);
-                              }else{
-                                if (isSwitched) {
+                              if (InAppPurchase.isPro ||
+                                  InAppPurchase.isProAI) {
                                 saveImage(recievedImage!);
                               } else {
-                                await saveImage(watermarkedImage!);
-                              }
+                                if (isSwitched) {
+                                  saveImage(recievedImage!);
+                                } else {
+                                  await saveImage(watermarkedImage!);
+                                }
                               }
                             } else {
                               saveVideoToGallery(widget.editedvideo!.path);
@@ -422,69 +440,77 @@ class _ResultScreenState extends State<ResultScreen> {
                                         children: [
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
-                                              vertical: 20
-                                            ),
+                                                vertical: 20),
                                             child: ElevatedButton(
                                                 onPressed: () {
-                                                  if(InAppPurchase.isPro || InAppPurchase.isProAI){
-                                                    if(widget.editedvideo != null){
-                                                      SnapChatHelper.sendVideoToSnapChat(widget.editedvideo,context);
-                                                    }else{
-                                                      SnapChatHelper.sendImageToSnapChat(recievedImage!,context);
-                                                    }
-                                                  }else{
-                                                    if (widget.editedvideo != null) {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (context) =>
-                                                          SnapChatShareDialog(
-                                                        onTapShare: () {
-                                                          SnapChatHelper
-                                                              .sendVideoToSnapChat(
-                                                                  widget
-                                                                      .editedvideo,
-                                                                  context);
-                                                        },
-                                                      ),
-                                                    );
-                                                  } else if (recievedImage !=
-                                                      null) {
-                                                    if (isSwitched) {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            SnapChatShareDialog(
-                                                          onTapShare: () {
-                                                            SnapChatHelper
-                                                                .sendImageToSnapChat(
-                                                                    recievedImage!,
-                                                                    context);
-                                                          },
-                                                        ),
-                                                      );
+                                                  if (InAppPurchase.isPro ||
+                                                      InAppPurchase.isProAI) {
+                                                    if (widget.editedvideo !=
+                                                        null) {
+                                                      SnapChatHelper
+                                                          .sendVideoToSnapChat(
+                                                              widget
+                                                                  .editedvideo,
+                                                              context);
                                                     } else {
+                                                      SnapChatHelper
+                                                          .sendImageToSnapChat(
+                                                              recievedImage!,
+                                                              context);
+                                                    }
+                                                  } else {
+                                                    if (widget.editedvideo !=
+                                                        null) {
                                                       showDialog(
                                                         context: context,
                                                         builder: (context) =>
                                                             SnapChatShareDialog(
                                                           onTapShare: () {
                                                             SnapChatHelper
-                                                                .sendImageToSnapChat(
-                                                                    watermarkedImage!,
+                                                                .sendVideoToSnapChat(
+                                                                    widget
+                                                                        .editedvideo,
                                                                     context);
                                                           },
                                                         ),
                                                       );
+                                                    } else if (recievedImage !=
+                                                        null) {
+                                                      if (isSwitched) {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (context) =>
+                                                              SnapChatShareDialog(
+                                                            onTapShare: () {
+                                                              SnapChatHelper
+                                                                  .sendImageToSnapChat(
+                                                                      recievedImage!,
+                                                                      context);
+                                                            },
+                                                          ),
+                                                        );
+                                                      } else {
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (context) =>
+                                                              SnapChatShareDialog(
+                                                            onTapShare: () {
+                                                              SnapChatHelper
+                                                                  .sendImageToSnapChat(
+                                                                      watermarkedImage!,
+                                                                      context);
+                                                            },
+                                                          ),
+                                                        );
+                                                      }
                                                     }
                                                   }
-                                                  }
-                                                  
                                                 },
                                                 style: ElevatedButton.styleFrom(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                          vertical: 8,
-                                                          horizontal: 10),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 8,
+                                                      horizontal: 10),
                                                   backgroundColor: Colors.black,
                                                   foregroundColor:
                                                       const Color.fromARGB(
@@ -496,8 +522,7 @@ class _ResultScreenState extends State<ResultScreen> {
                                                     fontWeight: FontWeight.w700,
                                                     fontSize: 20,
                                                   ),
-                                                )
-                                                ),
+                                                )),
                                           ),
                                           ElevatedButton(
                                               onPressed: () async {
@@ -507,22 +532,25 @@ class _ResultScreenState extends State<ResultScreen> {
                                                         await getTemporaryDirectory();
                                                     final path =
                                                         '${temp.path}/image.jpg';
-                                                    File(path).writeAsBytesSync(recievedImage!);
+                                                    File(path).writeAsBytesSync(
+                                                        recievedImage!);
                                                     XFile file = XFile(path);
                                                     Share.shareXFiles([file]);
-                                                  } else{ 
+                                                  } else {
                                                     final temp =
                                                         await getTemporaryDirectory();
                                                     final path =
                                                         '${temp.path}/image.jpg';
                                                     File(path).writeAsBytesSync(
                                                         watermarkedImage!);
-                                                        XFile file = XFile(path);
+                                                    XFile file = XFile(path);
                                                     Share.shareXFiles([file]);
                                                   }
-                                                } else if (widget.editedvideo != null) {
-                                                  XFile file = XFile(widget.editedvideo!.path);
-                                                    Share.shareXFiles([file]);
+                                                } else if (widget.editedvideo !=
+                                                    null) {
+                                                  XFile file = XFile(
+                                                      widget.editedvideo!.path);
+                                                  Share.shareXFiles([file]);
                                                 }
                                               },
                                               style: ElevatedButton.styleFrom(
@@ -557,12 +585,12 @@ class _ResultScreenState extends State<ResultScreen> {
                                 const Color.fromARGB(255, 216, 213, 213),
                             foregroundColor: Colors.black,
                           ),
-                          child:  const Text(
+                          child: const Text(
                             'Share',
                             style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 25,
-                                                ),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25,
+                            ),
                           ),
                         ),
                         const SizedBox(
@@ -570,19 +598,19 @@ class _ResultScreenState extends State<ResultScreen> {
                         ),
                         ElevatedButton(
                           onPressed: () {
-                            if(widget.editedvideo != null){
-                              if(_videoController!.value.isInitialized){
-                              _videoController!.pause();
+                            if (widget.editedvideo != null) {
+                              if (_videoController!.value.isInitialized) {
+                                _videoController!.pause();
+                              }
                             }
-                            }
-                            if(isEditor || widget.isVid){
-                              Navigator.of(context).push(
-                              MaterialPageRoute(builder: (ctx)=> const TabsScreen(isEditor: true,))
-                            );
-                            }else{
-                              Navigator.of(context).push(
-                              MaterialPageRoute(builder: (ctx)=> const TabsScreen())
-                            );
+                            if (isEditor || widget.isVid) {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (ctx) => const TabsScreen(
+                                        isEditor: true,
+                                      )));
+                            } else {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (ctx) => const TabsScreen()));
                             }
                           },
                           style: ElevatedButton.styleFrom(
@@ -591,12 +619,12 @@ class _ResultScreenState extends State<ResultScreen> {
                             backgroundColor: Colors.black,
                             foregroundColor: Colors.white,
                           ),
-                          child:  const Text(
+                          child: const Text(
                             'Regenerate',
                             style: TextStyle(
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 25,
-                                                ),
+                              fontWeight: FontWeight.w700,
+                              fontSize: 25,
+                            ),
                           ),
                         ),
                       ],
@@ -634,11 +662,7 @@ class CustomRoundedButon extends StatelessWidget {
                 shape: BoxShape.circle,
                 color: Color.fromARGB(255, 216, 213, 213)),
             child: Center(
-              child: Icon(
-                icon,
-                size: 35,
-                color: Colors.black
-              ),
+              child: Icon(icon, size: 35, color: Colors.black),
             ),
           ),
         ),
@@ -646,4 +670,27 @@ class CustomRoundedButon extends StatelessWidget {
       ],
     );
   }
+}
+
+void _showDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Alert"),
+        content: const Text("In appropirate image"),
+        actions: <Widget>[
+          ElevatedButton(
+            child: const Text("Back"),
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (ctx) => const TabsScreen()));
+              // Navigator.popUntil(
+              //     context, (route) => route.settings.name == 'MainScreen');
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

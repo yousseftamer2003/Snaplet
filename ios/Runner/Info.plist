@@ -254,5 +254,10 @@
 			<string>UIInterfaceOrientationPortrait</string>
 			<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		</array>
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string>access to save files to photo library.</string>
+		<key>NSFileProviderDomainUsageDescription</key>
+		<string>access to files stored on device.</string>
+
 	</dict>
 </plist>
