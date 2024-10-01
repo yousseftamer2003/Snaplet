@@ -25,7 +25,7 @@ class SnapChatHelper {
   static Future<bool> get checkSnapchatInstalled async {
     if (Platform.isAndroid) {
       try {
-        return await AppCheck.isAppEnabled("com.snapchat.android");
+        return await AppCheck().isAppEnabled("com.snapchat.android");
       } catch (e) {
         return false;
       }
@@ -36,7 +36,8 @@ class SnapChatHelper {
     throw UnsupportedError("Unsupported platform");
   }
 
-  static Future<void> sendImageToSnapChat(Uint8List media, BuildContext context) async {
+  static Future<void> sendImageToSnapChat(
+      Uint8List media, BuildContext context) async {
     if (!await checkSnapchatInstalled) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -74,7 +75,8 @@ class SnapChatHelper {
     }
   }
 
-  static Future<void> sendVideoToSnapChat(File? videoFile,BuildContext context) async {
+  static Future<void> sendVideoToSnapChat(
+      File? videoFile, BuildContext context) async {
     if (!await checkSnapchatInstalled) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -98,6 +100,7 @@ class SnapChatHelper {
       SnapkitFlutter.instance
           .send(mediaType: SnapMediaType.video, filePath: videoFile.path);
     }
+
     AdsLoader.loadInterstitialAd(whenFinished: whenFinished);
     // final ImagePicker picker = ImagePicker();
     // videoFile = await picker.pickVideo(
