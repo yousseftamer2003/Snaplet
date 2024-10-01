@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -40,7 +39,7 @@ class ImageToImageScreen extends StatefulWidget {
 }
 
 class _ImageToImageScreenState extends State<ImageToImageScreen> {
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   TextEditingController promptController = TextEditingController();
   String? base64Image;
   int cropTrials = 0;
@@ -69,8 +68,8 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
     if (!InAppPurchase.isProAI) {
       _init();
     }
-    if(!(InAppPurchase.isPro || InAppPurchase.isProAI)){
-      Provider.of<RewardAdsService>(context,listen: false).loadAd();
+    if (!(InAppPurchase.isPro || InAppPurchase.isProAI)) {
+      Provider.of<RewardAdsService>(context, listen: false).loadAd();
     }
     super.initState();
   }
@@ -199,13 +198,13 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
   }
 
   bool isContentAppropriate(String prompt) {
-    for (var word in  bannedWords) {
-    if (prompt.toLowerCase().contains(word.toLowerCase())) {
-      return false;
+    for (var word in bannedWords) {
+      if (prompt.toLowerCase().contains(word.toLowerCase())) {
+        return false;
+      }
     }
-  }
-  
-  return true;
+
+    return true;
   }
 
   @override
@@ -217,7 +216,8 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
-        backgroundColor: themeProvider.isDarkMode ? darkMoodColor : Colors.white,
+        backgroundColor:
+            themeProvider.isDarkMode ? darkMoodColor : Colors.white,
         appBar: AppBar(
           backgroundColor:
               themeProvider.isDarkMode ? darkMoodColor : Colors.white,
@@ -243,7 +243,7 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
           leading: IconButton(
             onPressed: () {
               setState(() {
-                cropTrials =0 ;
+                cropTrials = 0;
               });
               Navigator.pop(context);
             },
@@ -265,8 +265,9 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                   ),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color:
-                        themeProvider.isDarkMode ? darkModeHeavey : Colors.white,
+                    color: themeProvider.isDarkMode
+                        ? darkModeHeavey
+                        : Colors.white,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.purple.withOpacity(0.7),
@@ -303,7 +304,8 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                                           fontWeight: FontWeight.w700,
                                           fontSize: 24.sp),
                                     ),
-                                    const Icon(Icons.edit, color: Colors.purple),
+                                    const Icon(Icons.edit,
+                                        color: Colors.purple),
                                   ],
                                 ),
                               ],
@@ -317,7 +319,10 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                                 controller: promptController,
                                 maxLines: null,
                                 inputFormatters: [
-                                            FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s!+-_@#$%^&*(),.?":{}|<>]'),),
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(
+                                        r'[a-zA-Z0-9\s!+-_@#$%^&*(),.?":{}|<>]'),
+                                  ),
                                 ],
                                 decoration: InputDecoration(
                                   labelStyle: TextStyle(
@@ -326,7 +331,8 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                                   ),
                                   hintText:
                                       'Type here a detailed description for what you want to see in your artwork',
-                                  helperText: 'Only English letters, numbers, and symbols are allowed.',
+                                  helperText:
+                                      'Only English letters, numbers, and symbols are allowed.',
                                   hintStyle: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       color: themeProvider.isDarkMode
@@ -339,19 +345,20 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                                   focusedBorder: InputBorder.none,
                                   floatingLabelBehavior:
                                       FloatingLabelBehavior.always,
-                                  contentPadding:
-                                      const EdgeInsets.symmetric(vertical: 20.0),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      vertical: 20.0),
                                 ),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
                                     color: themeProvider.isDarkMode
                                         ? Colors.white
                                         : Colors.black),
-                                        onSaved: (value) async{
-                                          setState(()  {
-                                            isAppropriate =  isContentAppropriate(value!);
-                                          });
-                                        },
+                                onSaved: (value) async {
+                                  setState(() {
+                                    isAppropriate =
+                                        isContentAppropriate(value!);
+                                  });
+                                },
                               ),
                             ),
                             const Row(
@@ -373,16 +380,16 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                     SizedBox(width: 20.w),
                     Text(
                       'Select ',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 19.sp),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 19.sp),
                     ),
                     GradientText(
                       'Image to generate from',
                       gradient: const LinearGradient(
                         colors: [Colors.purple, Colors.pink],
                       ),
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 19.sp),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 19.sp),
                     ),
                   ],
                 ),
@@ -436,14 +443,15 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                                         width: 150,
                                         height: 150,
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(20),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
                                           border: Border.all(
                                             color: Colors.pink,
                                             width: 1,
                                           ),
                                           image: DecorationImage(
-                                            image:
-                                                MemoryImage(widget.resuseImage!),
+                                            image: MemoryImage(
+                                                widget.resuseImage!),
                                             fit: BoxFit.fill,
                                           ),
                                         ),
@@ -473,8 +481,8 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                                       width: 1,
                                     ),
                                     image: DecorationImage(
-                                      image:
-                                          MemoryImage(base64Decode(base64Image!)),
+                                      image: MemoryImage(
+                                          base64Decode(base64Image!)),
                                       fit: BoxFit.fill,
                                     ),
                                   ),
@@ -490,7 +498,9 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                                             color: Colors.red,
                                           ),
                                           Text(
-                                            cropTrials < 1? 'the image\'s aspect ratio has to be 1:1' : 'check you have done it 1:1 please',
+                                            cropTrials < 1
+                                                ? 'the image\'s aspect ratio has to be 1:1'
+                                                : 'check you have done it 1:1 please',
                                             style: const TextStyle(
                                               color: Colors.red,
                                             ),
@@ -502,12 +512,13 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                                     : ElevatedButton(
                                         onPressed: () async {
                                           cropTrials++;
-                                          final croppedImage = await Navigator.of(
-                                                  context)
+                                          final croppedImage = await Navigator
+                                                  .of(context)
                                               .push(MaterialPageRoute(
-                                                  builder: (ctx) => ImageCropper(
-                                                      image: base64Decode(
-                                                          base64Image!))));
+                                                  builder: (ctx) =>
+                                                      ImageCropper(
+                                                          image: base64Decode(
+                                                              base64Image!))));
                                           img.Image? decodedImage =
                                               img.decodeImage(croppedImage);
                                           setState(() {
@@ -536,34 +547,42 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                   ),
                   child: ElevatedButton(
                     onPressed: isButtonEnabled &&
-                            (base64Image != null || widget.resuseImage != null) &&
+                            (base64Image != null ||
+                                widget.resuseImage != null) &&
                             isAspectRatioEqual
-                        ? () async{
-                          if (formKey.currentState!.validate()) {
-                                    formKey.currentState!.save();
-                                  }
-                                  if(isAppropriate){
-                                    if (freeAttempts <= 5) {
-                              if(InAppPurchase.isPro || InAppPurchase.isProAI){
-                                      bool hasInternet = await checkInternetConnection();
-                                        if(hasInternet){
-                                          generateImage();
-                                        }else{
-                                          // ignore: use_build_context_synchronously
-                                          showNoInternetDialog(context);
-                                        }
-                                    }else{
-                                      Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
-                                    }
-                            } else {
-                              showMyDialog(context);
+                        ? () async {
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
                             }
-                                  }else{
-                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
+                            if (isAppropriate) {
+                              if (freeAttempts <= 5) {
+                                if (InAppPurchase.isPro ||
+                                    InAppPurchase.isProAI) {
+                                  bool hasInternet =
+                                      await checkInternetConnection();
+                                  if (hasInternet) {
+                                    generateImage();
+                                  } else {
+                                    // ignore: use_build_context_synchronously
+                                    showNoInternetDialog(context);
                                   }
-                                  if (formKey.currentState!.validate()) {
-                                    formKey.currentState!.save();
-                                  }
+                                } else {
+                                  Provider.of<RewardAdsService>(context,
+                                          listen: false)
+                                      .showAd(context, generateImage);
+                                }
+                              } else {
+                                showMyDialog(context);
+                              }
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'your text contains unAppropriate words please remove it')));
+                            }
+                            if (formKey.currentState!.validate()) {
+                              formKey.currentState!.save();
+                            }
                           }
                         : null,
                     style: ElevatedButton.styleFrom(
@@ -605,16 +624,16 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                     const SizedBox(width: 18),
                     Text(
                       'Choose a ',
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 23.sp),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 23.sp),
                     ),
                     GradientText(
                       'Style',
                       gradient: const LinearGradient(
                         colors: [Colors.purple, Colors.pink],
                       ),
-                      style:
-                          TextStyle(fontWeight: FontWeight.w700, fontSize: 23.sp),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w700, fontSize: 23.sp),
                     ),
                     const Text(
                       '(Optional)',
@@ -723,7 +742,8 @@ class _ImageToImageScreenState extends State<ImageToImageScreen> {
                                   ),
                                   child: const Center(
                                     child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         Icon(Icons.lock),
                                         Text(

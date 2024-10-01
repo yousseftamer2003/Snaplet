@@ -167,17 +167,17 @@ class _MyHomePageState extends State<MyHomePage> {
               isVid: false,
             )));
   }
-  
-  bool isContentAppropriate(String prompt) {
-  for (var word in bannedWords) {
-    RegExp regex = RegExp(r'\b' + RegExp.escape(word) + r'\b', caseSensitive: false);
-    if (regex.hasMatch(prompt)) {
-      return false;
-    }
-  }
-  return true;
-}
 
+  bool isContentAppropriate(String prompt) {
+    for (var word in bannedWords) {
+      RegExp regex =
+          RegExp(r'\b' + RegExp.escape(word) + r'\b', caseSensitive: false);
+      if (regex.hasMatch(prompt)) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +188,8 @@ class _MyHomePageState extends State<MyHomePage> {
         FocusScope.of(context).requestFocus(FocusNode());
       },
       child: Scaffold(
-        backgroundColor: themeProvider.isDarkMode ? darkMoodColor : Colors.white,
+        backgroundColor:
+            themeProvider.isDarkMode ? darkMoodColor : Colors.white,
         body: SafeArea(
           child: ScrollConfiguration(
             behavior: NoOverscrollBehavior(),
@@ -259,19 +260,24 @@ class _MyHomePageState extends State<MyHomePage> {
                                     key: formKey,
                                     child: TextFormField(
                                       inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9\s!+-_@#$%^&*(),.?":{}|<>]'),),
-                              ],
+                                        FilteringTextInputFormatter.allow(
+                                          RegExp(
+                                              r'[a-zA-Z0-9\s!+-_@#$%^&*(),.?":{}|<>]'),
+                                        ),
+                                      ],
                                       controller: promptController,
                                       maxLines: null,
                                       decoration: InputDecoration(
-                                        helperText: 'Only English letters, numbers, and symbols are allowed.',
+                                        helperText:
+                                            'Only English letters, numbers, and symbols are allowed.',
                                         hintText:
                                             'Type here a detailed description for what you want to see in your artwork',
                                         hintStyle: TextStyle(
                                             fontWeight: FontWeight.w700,
                                             color: themeProvider.isDarkMode
                                                 ? Colors.white.withOpacity(0.4)
-                                                : Colors.black.withOpacity(0.4)),
+                                                : Colors.black
+                                                    .withOpacity(0.4)),
                                         hintMaxLines: 3,
                                         border: InputBorder.none,
                                         enabledBorder: InputBorder.none,
@@ -287,9 +293,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                           color: themeProvider.isDarkMode
                                               ? Colors.white
                                               : Colors.black),
-                                      onSaved: (value) async{
-                                        setState(()  {
-                                          isAppropriate =  isContentAppropriate(value!);
+                                      onSaved: (value) async {
+                                        setState(() {
+                                          isAppropriate =
+                                              isContentAppropriate(value!);
                                         });
                                       },
                                     ),
@@ -397,7 +404,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                     Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(15.0),
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
                                         gradient: LinearGradient(
                                           colors: [
                                             Colors.black.withOpacity(0.6),
@@ -475,29 +483,36 @@ class _MyHomePageState extends State<MyHomePage> {
                           horizontal: 30.w,
                         ),
                         child: ElevatedButton(
-                          onPressed: isButtonEnabled 
-                              ? () async{
-                                if (formKey.currentState!.validate()) {
+                          onPressed: isButtonEnabled
+                              ? () async {
+                                  if (formKey.currentState!.validate()) {
                                     formKey.currentState!.save();
                                   }
-                                  if(isAppropriate){
+                                  if (isAppropriate) {
                                     if (freeAttempts <= 5) {
-                                    if (InAppPurchase.isPro || InAppPurchase.isProAI) {
-                                        bool hasInternet = await checkInternetConnection();
-                                        if(hasInternet){
+                                      if (InAppPurchase.isPro ||
+                                          InAppPurchase.isProAI) {
+                                        bool hasInternet =
+                                            await checkInternetConnection();
+                                        if (hasInternet) {
                                           generateImage();
-                                        }else{
+                                        } else {
                                           // ignore: use_build_context_synchronously
                                           showNoInternetDialog(context);
                                         }
+                                      } else {
+                                        Provider.of<RewardAdsService>(context,
+                                                listen: false)
+                                            .showAd(context, generateImage);
+                                      }
                                     } else {
-                                      Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
+                                      showMyDialog(context);
                                     }
                                   } else {
-                                    showMyDialog(context);
-                                  }
-                                  }else{
-                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('your text contains unAppropriate words please remove it')));
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'your text contains unAppropriate words please remove it')));
                                   }
                                   if (formKey.currentState!.validate()) {
                                     formKey.currentState!.save();

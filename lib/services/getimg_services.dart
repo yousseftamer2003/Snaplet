@@ -4,11 +4,13 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:sfs_editor/constants/strings.dart';
 import 'package:http/http.dart' as http;
+import 'package:sfs_editor/core/helper/vision_api.dart';
 import 'package:sfs_editor/models/aimodels_model.dart';
 
 class GetIMageServices with ChangeNotifier {
   Uint8List? imageData;
   List<AiModels> allmodels = [];
+  bool isInappropriate = false;
   Future<void> postEssential(String promptText) async {
     try {
       if(imageData != null){
@@ -33,6 +35,10 @@ class GetIMageServices with ChangeNotifier {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         String base64Image = responseData['image'];
           imageData = base64Decode(base64Image);
+          isInappropriate = await isInappropriateImage(base64Image);
+          if(isInappropriate) {
+            imageData = base64.decode(inappropriateImagePlaceholder);
+          }
           notifyListeners();
       } else {
         log('error in post, StatusCode: ${response.statusCode}');
@@ -73,6 +79,10 @@ class GetIMageServices with ChangeNotifier {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         String base64Image = responseData['image'];
           imageData = base64Decode(base64Image);
+          isInappropriate = await isInappropriateImage(base64Image);
+          if(isInappropriate) {
+            imageData = base64.decode(inappropriateImagePlaceholder);
+          }
           notifyListeners();
       } else {
         log('error in post, StatusCode: ${response.statusCode}');
@@ -136,6 +146,10 @@ class GetIMageServices with ChangeNotifier {
         Map<String, dynamic> responseData = jsonDecode(response.body);
         String base64Image = responseData['image'];
           imageData = base64Decode(base64Image);
+          isInappropriate = await isInappropriateImage(base64Image);
+          if(isInappropriate) {
+            imageData = base64.decode(inappropriateImagePlaceholder);
+          }
           notifyListeners();
       } else {
         log('error in post, StatusCode: ${response.statusCode}');
