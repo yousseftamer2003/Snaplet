@@ -258,6 +258,7 @@
 		<string>access to save files to photo library.</string>
 		<key>NSFileProviderDomainUsageDescription</key>
 		<string>access to files stored on device.</string>
-
+		<key>NSUserTrackingUsageDescription</key>
+		<string>This app requires tracking permission to improve your experience.</string>
 	</dict>
 </plist>

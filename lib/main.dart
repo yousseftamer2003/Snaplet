@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
+import 'package:sfs_editor/core/helper/permissions_helper.dart';
 import 'package:sfs_editor/core/in_app_purchase.dart';
 import 'package:sfs_editor/screens/splashscreen.dart';
 import 'package:sfs_editor/services/ai_tools_service.dart';
@@ -23,6 +24,9 @@ void main() async {
 
   var sh = await SharedPreferences.getInstance();
   await sh.setInt('free_attempts', 0);
+
+  await PermissionHandler().requestStoragePermission();
+  await PermissionHandler().requestTrackingPermission();
 
   runApp(const MyApp());
 }
