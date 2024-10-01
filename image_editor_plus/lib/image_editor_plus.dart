@@ -124,7 +124,7 @@ class ImageEditor extends StatelessWidget {
   static ThemeData theme = ThemeData(
     scaffoldBackgroundColor: Colors.black,
     colorScheme: const ColorScheme.dark(
-      background: Colors.black,
+      surface: Colors.black,
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black87,
@@ -557,7 +557,10 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
               ),
             IconButton(
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              icon: const Text('Done',style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),),
+              icon: const Text(
+                'Done',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
               onPressed: () async {
                 resetTransformation();
                 setState(() {});
@@ -609,7 +612,7 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
 
   double flipValue = 0;
   int rotateValue = 0;
-  
+
   double brightness = 0;
 
   double x = 0;
@@ -875,8 +878,7 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
                       icon: Icons.brightness_6,
                       text: i18n('Brightness'),
                       onTap: () async {
-
-                        showModalBottomSheet(                     
+                        showModalBottomSheet(
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(10),
@@ -919,7 +921,7 @@ class _SingleImageEditorState extends State<SingleImageEditor> {
                                               onChanged: (v) {
                                                 setS(() {
                                                   setState(() {
-                                                   brightness = v;
+                                                    brightness = v;
                                                   });
                                                 });
                                               },
@@ -2004,10 +2006,10 @@ class _ImageEditorDrawingState extends State<ImageEditorDrawing> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               icon: Icon(
                 Icons.undo,
-                color: 
-                // control.paths.isNotEmpty
-                //     ? Colors.white
-                //     : 
+                color:
+                    // control.paths.isNotEmpty
+                    //     ? Colors.white
+                    //     :
                     Colors.white.withAlpha(80),
               ),
               onPressed: () {
@@ -2037,7 +2039,8 @@ class _ImageEditorDrawingState extends State<ImageEditorDrawing> {
               padding: const EdgeInsets.symmetric(horizontal: 8),
               icon: const Icon(Icons.check),
               onPressed: () async {
-                if (!_imageKey.currentState!.isEdited) return Navigator.pop(context);
+                if (!_imageKey.currentState!.isEdited)
+                  return Navigator.pop(context);
                 loadingScreen.show();
                 final image = await _imageKey.currentState!.exportImage();
                 loadingScreen.hide();
@@ -2052,7 +2055,8 @@ class _ImageEditorDrawingState extends State<ImageEditorDrawing> {
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
-              color: widget.options.showBackground ? null : currentBackgroundColor,
+              color:
+                  widget.options.showBackground ? null : currentBackgroundColor,
               // image: widget.options.showBackground
               //     ? DecorationImage(
               //         image: Image.memory(widget.image.bytes).image,
