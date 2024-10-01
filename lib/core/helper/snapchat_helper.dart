@@ -25,7 +25,7 @@ class SnapChatHelper {
   static Future<bool> get checkSnapchatInstalled async {
     if (Platform.isAndroid) {
       try {
-        return await AppCheck().isAppEnabled("com.snapchat.android");
+        return await AppCheck.isAppEnabled("com.snapchat.android");
       } catch (e) {
         return false;
       }
