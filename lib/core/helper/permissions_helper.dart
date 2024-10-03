@@ -38,7 +38,7 @@ class PermissionHandler {
       } else if (await Permission.manageExternalStorage.request().isGranted) {
         return true;
       } else if (await Permission.storage.isPermanentlyDenied) {
-        await openAppSettings();
+        await _openAppSettings();
         return false;
       }
     } else if (Platform.isIOS) {
@@ -67,27 +67,39 @@ class PermissionHandler {
     return await permission.isGranted;
   }
 
-  Future<bool> openAppSettings() async {
-    return await _instance.openAppSettings();
+  Future<bool> _openAppSettings() async {
+    return await openAppSettings();
   }
 
   Future<void> requestTrackingPermission() async {
     if (Platform.isIOS) {
-      final status = await AppTrackingTransparency.trackingAuthorizationStatus;
-      if (status == TrackingStatus.notDetermined ||
-          status == TrackingStatus.denied) {
-        await AppTrackingTransparency.requestTrackingAuthorization();
-      } else if (status == TrackingStatus.restricted) {
-        await openAppSettings();
+      final status = await Permission.appTrackingTransparency.status;
+      if (status == PermissionStatus.denied ||
+          status == PermissionStatus.limited) {
+        await Permission.appTrackingTransparency.request();
+      } else if (status == PermissionStatus.permanentlyDenied) {
+        await _openAppSettings();
       }
     }
   }
+
+  // Future<void> requestTrackingPermission() async {
+  //   if (Platform.isIOS) {
+  //     final status = await AppTrackingTransparency.trackingAuthorizationStatus;
+  //     if (status == TrackingStatus.notDetermined ||
+  //         status == TrackingStatus.denied) {
+  //       await AppTrackingTransparency.requestTrackingAuthorization();
+  //     } else if (status == TrackingStatus.restricted) {
+  //       await openAppSettings();
+  //     }
+  //   }
+  // }
 
   Future<void> handlePermanentDenial(
       Permission permission, Function onOpenSettings) async {
     bool isPermanentlyDenied = await permission.isPermanentlyDenied;
     if (isPermanentlyDenied) {
-      bool didOpenSettings = await openAppSettings();
+      bool didOpenSettings = await _openAppSettings();
       if (didOpenSettings) {
         onOpenSettings();
       }
