@@ -45,7 +45,7 @@ class GoogleAds {
 
   String get interstitialAdUnitId => Platform.isAndroid
     ? "ca-app-pub-3523762960785202/4459387396" // Android Release Key
-    : "ca-app-pub-3523762960785202/3721020799"; // iOS Release Key
+    : "ca-app-pub-3863114333197264/1284220219"; // iOS Release Key
 
 
   String get nativeAdUnitId => kDebugMode

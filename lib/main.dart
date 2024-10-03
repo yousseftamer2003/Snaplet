@@ -9,7 +9,6 @@ import 'package:sfs_editor/services/ai_tools_service.dart';
 import 'package:sfs_editor/services/dark_mode_service.dart';
 import 'package:sfs_editor/services/getimg_services.dart';
 import 'package:sfs_editor/services/reward_ads_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,9 +19,6 @@ void main() async {
   } else if (Platform.isAndroid) {
     await InAppPurchase.initialize(apiKey: 'goog_rdHmnejivVNEsqqzYKvqqKWGZUZ');
   }
-
-  var sh = await SharedPreferences.getInstance();
-  await sh.setInt('free_attempts', 0);
 
   runApp(const MyApp());
 }

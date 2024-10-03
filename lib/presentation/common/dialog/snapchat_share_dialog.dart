@@ -16,20 +16,20 @@ class SnapChatShareDialog extends StatefulWidget {
 }
 
 class _SnapChatShareDialogState extends State<SnapChatShareDialog> {
-  RewardedInterstitialAd? rewardedAd;
+  RewardedAd? rewardedAd;
   bool isLoadingAd = false;
   final adUnitId = Platform.isAndroid
       ? 'ca-app-pub-3523762960785202/7946213982' 
-      : 'ca-app-pub-3523762960785202/2470899756'; 
+      : 'ca-app-pub-3863114333197264/2535327369'; 
 
   void loadAd() {
     setState(() {
       isLoadingAd = true;
     });
-    RewardedInterstitialAd.load(
+    RewardedAd.load(
       adUnitId: adUnitId,
       request: const AdRequest(),
-      rewardedInterstitialAdLoadCallback: RewardedInterstitialAdLoadCallback(
+      rewardedAdLoadCallback: RewardedAdLoadCallback(
         onAdLoaded: (ad) {
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdShowedFullScreenContent: (ad) {},

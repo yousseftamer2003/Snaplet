@@ -162,7 +162,7 @@ Set<String> bannedWords = {
   "anus",
   "apeshit",
   "arsehole",
-  // "ass",
+  "ass",
   "asshole",
   "assmunch",
   "auto erotic",

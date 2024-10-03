@@ -9,7 +9,7 @@ class RewardAdsService with ChangeNotifier {
   RewardedInterstitialAd? rewardedInterstitialAd;
   final adUnitId = Platform.isAndroid
       ? 'ca-app-pub-3523762960785202/7946213982'
-      : 'ca-app-pub-3523762960785202/6581161424';
+      : 'ca-app-pub-3863114333197264/9190630399';
 
   void loadAd() {
     RewardedInterstitialAd.load(
@@ -59,6 +59,9 @@ class RewardAdsService with ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ad has not reloaded yet, please wait a few seconds or check your internet')),
       );
+      if(Platform.isIOS){
+        onTapShare!();
+      }
     }
   }
 
