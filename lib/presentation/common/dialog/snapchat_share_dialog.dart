@@ -72,6 +72,7 @@ class _SnapChatShareDialogState extends State<SnapChatShareDialog> {
       });
     } else {
       log('RewardedAd not loaded yet');
+      widget.onTapShare!();
     }
   }
 

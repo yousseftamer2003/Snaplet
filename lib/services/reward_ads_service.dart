@@ -59,9 +59,6 @@ class RewardAdsService with ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ad has not reloaded yet, please wait a few seconds or check your internet')),
       );
-      if(Platform.isIOS){
-        onTapShare!();
-      }
     }
   }
 
