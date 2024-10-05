@@ -23,18 +23,21 @@ class SnapChatHelper {
   }
 
   static Future<bool> get checkSnapchatInstalled async {
-    if (Platform.isAndroid) {
-      try {
-        return await AppCheck.isAppEnabled("com.snapchat.android");
-      } catch (e) {
-        return false;
-      }
-    } else if (Platform.isIOS) {
-      return await _trySnapchatScheme();
+  if (Platform.isAndroid) {
+    try {
+      AppCheck appCheck = AppCheck();
+      bool isEnabled = await appCheck.isAppEnabled("com.snapchat.android");
+      return isEnabled;  // Return the value here
+    } catch (e) {
+      return false;  // Return false in case of any exception
     }
-
-    throw UnsupportedError("Unsupported platform");
+  } else if (Platform.isIOS) {
+    return await _trySnapchatScheme();  // Assuming _trySnapchatScheme() returns a boolean
   }
+
+  throw UnsupportedError("Unsupported platform");
+}
+
 
   static Future<void> sendImageToSnapChat(
       Uint8List media, BuildContext context) async {
