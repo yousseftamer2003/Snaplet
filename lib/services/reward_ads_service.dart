@@ -52,9 +52,8 @@ class RewardAdsService with ChangeNotifier {
       });
     }else if(errorMessage != null && errorMessage == 'No fill.'){
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ads are not available now.')),
+        const SnackBar(content: Text('Ads are not available now. come back sooner')),
       );
-      onTapShare!();
     }else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Ad has not reloaded yet, please wait a few seconds or check your internet')),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:sfs_editor/constants/strings.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -38,8 +40,17 @@ Future<bool> isInappropriateImage(String base64Image) async {
   if (labels['adult'] == 'VERY_LIKELY' ||
       labels['spoof'] == 'VERY_LIKELY' ||
       labels['medical'] == 'VERY_LIKELY' ||
-      labels['violence'] == 'VERY_LIKELY') {
+      labels['violence'] == 'VERY_LIKELY' ||
+      labels['racy'] == 'VERY_LIKELY' ||
+      labels['adult'] == 'LIKELY' || 
+      labels['adult'] == 'UNLIKELY' ||
+      labels['adult'] == 'POSSIBLE' ||
+      labels['racy'] == 'POSSIBLE' ||
+      labels['racy'] == 'LIKELY'
+      ) {
+        log('label: $labels');
     return true;
   }
+  log('label: $labels');
   return false;
 }
