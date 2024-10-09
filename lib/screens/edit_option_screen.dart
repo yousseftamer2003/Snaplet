@@ -16,6 +16,7 @@ import 'package:sfs_editor/core/ads/ads_loader.dart';
 import 'package:sfs_editor/screens/result_screen.dart';
 import 'package:sfs_editor/screens/video_editing_screens/show_options_screen.dart';
 import 'package:sfs_editor/services/dark_mode_service.dart';
+import 'package:sfs_editor/services/getimg_services.dart';
 
 class EditOptionScreen extends StatefulWidget {
   const EditOptionScreen({super.key});
@@ -93,6 +94,7 @@ class _EditOptionScreenState extends State<EditOptionScreen> {
                     );
                     await AdsLoader.showInterstitialAd();
                     if (editedImage != null) {
+                      Provider.of<GetIMageServices>(context,listen: false).isInappropriate = false;
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (ctx) => ResultScreen(
                                 editedImage: editedImage,
@@ -163,6 +165,7 @@ class _EditOptionScreenState extends State<EditOptionScreen> {
                   if (result != null) {
                     final file = File(result.files.single.path!);
                     if (!mounted) return;
+                    Provider.of<GetIMageServices>(context,listen: false).isInappropriate = false;
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => ShowOptionsScreen(

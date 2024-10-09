@@ -14,7 +14,6 @@ import 'package:provider/provider.dart';
 import 'package:sfs_editor/constants/color.dart';
 import 'package:sfs_editor/core/helper/snapchat_helper.dart';
 import 'package:sfs_editor/core/in_app_purchase.dart';
-import 'package:sfs_editor/home.dart';
 import 'package:sfs_editor/presentation/common/dialog/snapchat_share_dialog.dart';
 import 'package:sfs_editor/screens/image_to_image_screen.dart';
 import 'package:sfs_editor/screens/tabs_screen.dart';
@@ -112,9 +111,14 @@ class _ResultScreenState extends State<ResultScreen> {
       }
     }
   }
-
+    bool isLoading = true;
   @override
   void initState() {
+    Future.delayed(const Duration(seconds: 8), () {
+    setState(() {
+      isLoading = false;
+    });
+  });
     super.initState();
     if (!(InAppPurchase.isPro || InAppPurchase.isProAI)) {
       Provider.of<RewardAdsService>(context, listen: false).loadAd();
@@ -284,7 +288,18 @@ class _ResultScreenState extends State<ResultScreen> {
                                       fit: BoxFit.cover)
                                   : null,
                             ),
-                            child: widget.editedvideo != null
+                            child: isLoading? 
+                            const Center(child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GeneratingWidget(),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text('generating...')
+                    ],
+                  ),) : 
+                            widget.editedvideo != null
                                 ? AspectRatio(
                                     aspectRatio:
                                         _videoController!.value.aspectRatio,

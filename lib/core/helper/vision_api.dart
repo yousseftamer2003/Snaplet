@@ -46,8 +46,6 @@ Future<bool> isInappropriateImage(String base64Image) async {
       labels['spoof'] == 'LIKELY' || 
       labels['adult'] == 'UNLIKELY' ||
       labels['adult'] == 'POSSIBLE' ||
-      labels['spoof'] == 'POSSIBLE' ||
-      labels['spoof'] == 'UNLIKELY' ||
       labels['racy'] == 'POSSIBLE' ||
       labels['racy'] == 'LIKELY' ||
       labels['racy'] == 'UNLIKELY'
