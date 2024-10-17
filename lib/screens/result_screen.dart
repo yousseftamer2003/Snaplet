@@ -111,16 +111,20 @@ class _ResultScreenState extends State<ResultScreen> {
       }
     }
   }
-    bool isLoading = true;
+    bool isLoading = false;
   @override
   void initState() {
-    if(!isEditor || !widget.isVid){
+    isEditorCheck();
+  if(!isEditor && !widget.isVid){
+    setState(() {
+      isLoading = true;
+    });
       Future.delayed(const Duration(seconds: 8), () {
     setState(() {
       isLoading = false;
     });
   });
-    }
+  }
     super.initState();
     if (!(InAppPurchase.isPro || InAppPurchase.isProAI)) {
       Provider.of<RewardAdsService>(context, listen: false).loadAd();
