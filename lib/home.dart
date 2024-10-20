@@ -509,9 +509,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             showNoInternetDialog(context);
                                           }
                                         } else {
-                                          Provider.of<RewardAdsService>(context,
-                                                  listen: false)
-                                              .showAd(context, generateImage);
+                                          Provider.of<RewardAdsService>(context,listen: false).showAd(context, generateImage);
                                         }
                                       } else {
                                         showMyDialog(context);

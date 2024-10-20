@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 import 'package:sfs_editor/constants/color.dart';
 import 'package:sfs_editor/core/helper/snapchat_helper.dart';
 import 'package:sfs_editor/core/in_app_purchase.dart';
-import 'package:sfs_editor/presentation/common/dialog/snapchat_share_dialog.dart';
+// import 'package:sfs_editor/presentation/common/dialog/snapchat_share_dialog.dart';
 import 'package:sfs_editor/screens/image_to_image_screen.dart';
 import 'package:sfs_editor/screens/tabs_screen.dart';
 import 'package:sfs_editor/services/dark_mode_service.dart';
@@ -114,6 +114,7 @@ class _ResultScreenState extends State<ResultScreen> {
     bool isLoading = false;
   @override
   void initState() {
+    Provider.of<RewardAdsService>(context,listen: false).loadAd();
     isEditorCheck();
   if(!isEditor && !widget.isVid){
     setState(() {
@@ -464,65 +465,67 @@ class _ResultScreenState extends State<ResultScreen> {
                                                 vertical: 20),
                                             child: ElevatedButton(
                                                 onPressed: () {
-                                                  if (InAppPurchase.isPro ||
-                                                      InAppPurchase.isProAI) {
-                                                    if (widget.editedvideo !=
-                                                        null) {
-                                                      SnapChatHelper
-                                                          .sendVideoToSnapChat(
-                                                              widget
-                                                                  .editedvideo,
-                                                              context);
+                                                  if (InAppPurchase.isPro || InAppPurchase.isProAI) {
+                                                    if (widget.editedvideo != null) {
+                                                      SnapChatHelper.sendVideoToSnapChat(widget.editedvideo,context);
                                                     } else {
-                                                      SnapChatHelper
-                                                          .sendImageToSnapChat(
-                                                              recievedImage!,
-                                                              context);
+                                                      SnapChatHelper.sendImageToSnapChat(recievedImage!,context);
                                                     }
                                                   } else {
-                                                    if (widget.editedvideo !=
-                                                        null) {
-                                                      showDialog(
-                                                        context: context,
-                                                        builder: (context) =>
-                                                            SnapChatShareDialog(
-                                                          onTapShare: () {
-                                                            SnapChatHelper
-                                                                .sendVideoToSnapChat(
-                                                                    widget
-                                                                        .editedvideo,
-                                                                    context);
-                                                          },
-                                                        ),
-                                                      );
+                                                    if (widget.editedvideo != null) {
+                                                      final adService = Provider.of<RewardAdsService>(context,listen: false);
+                                                      adService.showAd(context, () async {
+                                                                  await SnapChatHelper.sendVideoToSnapChat(widget.editedvideo, context);
+                                                                  });
+                                                      // showDialog(
+                                                      //   context: context,
+                                                      //   builder: (context) =>
+                                                      //       SnapChatShareDialog(
+                                                      //     onTapShare: () {
+                                                      //       SnapChatHelper
+                                                      //           .sendVideoToSnapChat(
+                                                      //               widget
+                                                      //                   .editedvideo,
+                                                      //               context);
+                                                      //     },
+                                                      //   ),
+                                                      // );
                                                     } else if (recievedImage !=
                                                         null) {
                                                       if (isSwitched) {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (context) =>
-                                                              SnapChatShareDialog(
-                                                            onTapShare: () {
-                                                              SnapChatHelper
-                                                                  .sendImageToSnapChat(
-                                                                      recievedImage!,
-                                                                      context);
-                                                            },
-                                                          ),
-                                                        );
+                                                        final adService = Provider.of<RewardAdsService>(context,listen: false);
+                                                        adService.showAd(context, () async {
+                                                                  await SnapChatHelper.sendImageToSnapChat(recievedImage!, context);
+                                                                  });
+                                                        // showDialog(
+                                                        //   context: context,
+                                                        //   builder: (context) =>
+                                                        //       SnapChatShareDialog(
+                                                        //     onTapShare: () {
+                                                        //       SnapChatHelper
+                                                        //           .sendImageToSnapChat(
+                                                        //               recievedImage!,
+                                                        //               context);
+                                                        //     },
+                                                        //   ),
+                                                        // );
                                                       } else {
-                                                        showDialog(
-                                                          context: context,
-                                                          builder: (context) =>
-                                                              SnapChatShareDialog(
-                                                            onTapShare: () {
-                                                              SnapChatHelper
-                                                                  .sendImageToSnapChat(
-                                                                      watermarkedImage!,
-                                                                      context);
-                                                            },
-                                                          ),
-                                                        );
+                                                        final adService = Provider.of<RewardAdsService>(context,listen: false);
+                                                        adService.showAd(context, () async {
+                                                                  await SnapChatHelper.sendImageToSnapChat(watermarkedImage!, context);
+                                                                  });
+                                                        // showDialog(
+                                                        //   context: context,
+                                                        //   builder: (context) =>
+                                                        //       SnapChatShareDialog(
+                                                        //     onTapShare: () {
+                                                        //       SnapChatHelper
+                                                        //           .sendImageToSnapChat(
+                                                        //               watermarkedImage!,
+                                                        //               context);
+                                                        //     },
+                                                        //   ),
+                                                        // );
                                                       }
                                                     }
                                                   }
